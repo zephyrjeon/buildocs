@@ -3,7 +3,6 @@
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-// import { Spinner } from '@/components/spinner';
 
 export const Heading = () => {
   const isAuthenticated = true;
@@ -11,24 +10,29 @@ export const Heading = () => {
 
   return (
     <div className="max-w-3xl space-y-4">
-      <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold">
-        Your Ideas, Documents, & Plans. Unified. Welcome to{' '}
-        <span className="underline">Jotion</span>
-      </h1>
-      <h3 className="text-base sm:text-xl md:text-2xl font-medium">
-        Jotion is the connected workspace where <br />
-        better, faster work happens.
+      <div className="text-3xl font-bold whitespace-pre sm:text-5xl md:text-6xl">
+        <h1 className="sm:p-2">Document As You Wish</h1>
+        <h1 className="sm:p-2">Publish Your Work With</h1>
+        <h1 className="underline pt-3 sm:py-8 sm:text-6xl md:text-7xl">
+          Buildocs
+        </h1>
+      </div>
+      <h3 className="text-base font-medium whitespace-pre pb-4 sm:pb-8 sm:text-xl md:text-2xl">
+        Create your documents, layout and style it{`\n`}
+        in the way you want to present your work on the Web.
       </h3>
+
       {isLoading && (
         <div className="w-full flex items-center justify-center">
-          {/* <Spinner size="lg" /> */}
+          loading...
         </div>
       )}
+
       {isAuthenticated && !isLoading && (
-        <Button asChild>
-          <Link href="/buildocs/documents">
-            Enter Jotion
-            <ArrowRight className="h-4 w-4 ml-2" />
+        <Button asChild className="py-6 pl-12 pr-10 text-lg">
+          <Link href="/buildocs/documents/">
+            Enter Buildocs
+            <ArrowRight className="h-6 w-6 ml-2" />
           </Link>
         </Button>
       )}

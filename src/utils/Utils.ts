@@ -1,7 +1,7 @@
 export const Utils = {
   URLs: {
     rootURL: '/buildocs',
-    documentsURL: '/buildocs/documents/',
+    documentsURL: '/buildocs/documents',
     pagesURL: (documentId: string, pageId: string) =>
       `/buildocs/documents/${documentId}/pages/${pageId}`,
   },

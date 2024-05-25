@@ -4,9 +4,8 @@ import React from 'react';
 import { redirect } from 'next/navigation';
 import { Utils } from '../../../utils/Utils';
 import { Navigation } from './documents/_components/navigation';
-// import { Spinner } from '../../../components/spinner';
 
-export interface IMainLayoutProps {
+interface IMainLayoutProps {
   children: React.ReactNode;
 }
 
@@ -18,7 +17,6 @@ const MainLayout = (props: IMainLayoutProps) => {
   if (isLoading) {
     return (
       <div className="h-full flex items-center justify-center">
-        {/* <Spinner size="lg" /> */}
         <div>loading...</div>
       </div>
     );
@@ -31,10 +29,7 @@ const MainLayout = (props: IMainLayoutProps) => {
   return (
     <div className="h-full flex dark:bg-[#1F1F1F]">
       <Navigation />
-      <main className="flex-1 h-full overflow-y-auto">
-        {/* <SearchCommand /> */}
-        {children}
-      </main>
+      <main className="flex-1 h-full overflow-y-auto">{children}</main>
     </div>
   );
 };

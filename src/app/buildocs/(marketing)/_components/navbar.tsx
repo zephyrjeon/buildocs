@@ -9,14 +9,14 @@ import { useIsScrolled } from '../../../../hooks/useIsScrolled';
 import { ThemeToggle } from '../../../../components/ThemeToggle';
 
 export const Navbar = () => {
-  const isAuthenticated = false;
+  const isAuthenticated = true;
   const isLoading = false;
   const isScrolled = useIsScrolled();
 
   return (
     <div
       className={cn(
-        'z-50 bg-background dark:bg-[#1F1F1F] fixed top-0 flex items-center w-full p-6',
+        'z-50 bg-background dark:bg-[#1F1F1F] fixed top-0 flex items-center w-full p-6 bg-red-500',
         isScrolled && 'border-b shadow-sm'
       )}
     >
@@ -42,7 +42,7 @@ export const Navbar = () => {
         {isAuthenticated && !isLoading && (
           <>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/documents">Enter Jotion</Link>
+              <Link href="/buildocs/documents">Enter Buildocs</Link>
             </Button>
             {/* <UserButton
               afterSignOutUrl="/"

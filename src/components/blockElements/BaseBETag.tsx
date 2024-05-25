@@ -84,8 +84,6 @@ export const BaseBETag = (props: IBaseBETagProps) => {
       }}
       onDrop={() => {
         store.BEEditStore.reoderBE();
-        store.BEEditStore.setDraggedOverBE(null);
-        store.BEEditStore.setDraggingBE(null);
       }}
       onMouseLeave={() => {
         store.BEEditStore.setHoveredBE(null);

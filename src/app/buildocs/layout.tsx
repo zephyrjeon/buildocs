@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { ModalProvider } from '../../providers/modal-provider';
 import { ThemeProvider } from '../../providers/theme-provider';
 import '../globals.css';
-import { ModalProvider } from '../../providers/modal-provider';
-import { RootStoreContext, rootStore } from '@/stores/RootStore';
+import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,7 +20,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
-        {/* <RootStoreContext.Provider value={rootStore}> */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -29,9 +28,9 @@ export default function RootLayout({
           storageKey="buildocs-theme"
         >
           <ModalProvider />
+          <Toaster />
           {children}
         </ThemeProvider>
-        {/* </RootStoreContext.Provider> */}
       </body>
     </html>
   );
