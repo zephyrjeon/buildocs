@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { BE_TAGS, DO_BE } from '@/entities/blockElement/BEInterfaces';
 import { cn } from '@/lib/utils';
+import { BE_DROP_POSITION } from '@/stores/BEEditorStore';
 import { useStore } from '@/stores/RootStore';
 import { GripVertical } from 'lucide-react';
 import React from 'react';
@@ -48,11 +49,11 @@ export const BaseBETag = (props: IBaseBETagProps) => {
   const draggedOverBE = store.BEEditStore.useDraggedOverBE;
   const isDraggedOver = BE.id === draggedOverBE?.target?.id;
   const isDraggedOverOnTop =
-    isDraggedOver && draggedOverBE?.dropPosition === 'TOP';
+    isDraggedOver && draggedOverBE?.position === BE_DROP_POSITION.TOP;
   const isDraggedOverOnBottom =
-    isDraggedOver && draggedOverBE?.dropPosition === 'BOTTOM';
+    isDraggedOver && draggedOverBE?.position === BE_DROP_POSITION.BOTTOM;
   const isDraggedOverOnNext =
-    isDraggedOver && draggedOverBE?.dropPosition === 'NEXT';
+    isDraggedOver && draggedOverBE?.position === BE_DROP_POSITION.NEXT;
 
   const useDraggingBEs = store.BEEditStore.useDraggingBEs;
   const isDragging = !!useDraggingBEs.find((be) => be.id === BE.id);
@@ -70,7 +71,7 @@ export const BaseBETag = (props: IBaseBETagProps) => {
         e.preventDefault(); // without this, onDrop is not executed
         store.BEEditStore.setDraggedOverBE({
           target: BE,
-          dropPosition: 'BOTTOM',
+          position: BE_DROP_POSITION.BOTTOM,
         });
       }}
       onDragEnter={(e) => {}}
@@ -116,7 +117,7 @@ export const BaseBETag = (props: IBaseBETagProps) => {
             onDragOver={() =>
               store.BEEditStore.setDraggedOverBE({
                 target: BE,
-                dropPosition: 'TOP',
+                position: BE_DROP_POSITION.TOP,
               })
             }
             isActive={isDraggedOverOnTop}
@@ -128,7 +129,7 @@ export const BaseBETag = (props: IBaseBETagProps) => {
         onDragOver={() =>
           store.BEEditStore.setDraggedOverBE({
             target: BE,
-            dropPosition: 'NEXT',
+            position: BE_DROP_POSITION.NEXT,
           })
         }
         isActive={isDraggedOverOnNext}

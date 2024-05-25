@@ -18,6 +18,13 @@ import { Utils } from '@/utils/Utils';
 import { create } from 'zustand';
 import { RootStore } from './RootStore';
 
+export enum BE_RELATIONS {
+  SELF = 'SELF',
+  CHILDREN = 'CHILDREN',
+  PARENT = 'PARENT',
+  NONE = 'NONE',
+}
+
 enum SET_STATE_ACTIONS {
   ADD = 'ADD',
   REMOVE = 'REMOVE',
@@ -43,25 +50,28 @@ export class BEStore {
     return this.state.getState();
   }
 
-  private setState(action: 'ADD' | 'REMOVE', BE: DO_BE) {
+  private setState(action: SET_STATE_ACTIONS, BE: DO_BE) {
     switch (action) {
-      case 'ADD':
+      case SET_STATE_ACTIONS.ADD:
         if (this.getBEById(BE.id) === BE)
-          throw new Error('BE instance must be different to be set');
+          throw new Error('Must not be a existing BE instance to be set');
 
-        this.state.setState((state) => ({ ...state, [BE.id]: BE }));
-        break;
-      case 'REMOVE':
-        this.state.setState((state) => {
+        return this.state.setState((state) => ({ ...state, [BE.id]: BE }));
+
+      case SET_STATE_ACTIONS.REMOVE:
+        return this.state.setState((state) => {
           delete state[BE.id];
           return { ...state };
         });
-        break;
     }
   }
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
+  }
+
+  get useGetRootBE(): DORootBE {
+    return this.useState['root'] as DORootBE;
   }
 
   get useGetBEs() {
@@ -72,20 +82,20 @@ export class BEStore {
     return this.useState[id];
   }
 
-  get useGetRootBE(): DORootBE {
-    return this.useState['root'] as DORootBE;
-  }
-
   getBEById(id: string) {
     return this.getState[id];
   }
 
   getParentBE(BE: DO_BE) {
+    if (this.getRootBE.id === BE.id)
+      throw new Error('Cannot get parentBE of rootBE');
+
     const parent = this.getBEById(BE.parentId);
+
     if (this.BETypeGuards.isRecursive(parent)) {
       return parent;
     } else {
-      throw new Error('Parent is not a recursive BE');
+      throw new Error('ParentBE must be a recursive BE');
     }
   }
 
@@ -98,22 +108,22 @@ export class BEStore {
 
   setBE(BE: DO_BE | IDOBaseBE) {
     if (BE instanceof DOBaseBlockElement) {
-      this.setState('ADD', BE);
+      this.setState(SET_STATE_ACTIONS.ADD, BE);
     } else {
-      this.setState('ADD', this.instantiateBE(BE));
+      this.setState(SET_STATE_ACTIONS.ADD, this.instantiateBE(BE));
     }
 
     return this.getBEById(BE.id);
   }
 
   removeBE(id: string) {
-    this.setState('REMOVE', this.getBEById(id));
+    this.setState(SET_STATE_ACTIONS.REMOVE, this.getBEById(id));
   }
 
   parseBEs(rawData: string) {
     const jsonParsed: IDOBaseBE[] = JSON.parse(rawData);
 
-    jsonParsed.map((BE) => this.setState('ADD', this.instantiateBE(BE)));
+    jsonParsed.map((BE) => this.setBE(this.instantiateBE(BE)));
   }
 
   instantiateBE(BE: IDOBaseBE) {
@@ -138,21 +148,22 @@ export class BEStore {
   }
 
   getRelationOf(BE: DO_BE, towards: DO_BE) {
-    if (BE.id === towards.id) return 'SELF';
+    if (BE.id === towards.id) return BE_RELATIONS.SELF;
 
     // is BE1 children of BE2
     const isChildren = (BE1: DO_BE, BE2: DO_BE) => {
       if (BE1.id === BE2.id) return true;
 
       if (this.BETypeGuards.isRecursive(BE2)) {
-        const index = BE2.contents.childrenIds.findIndex(
-          (id) => !!isChildren(BE1, this.getBEById(id))
+        const index = BE2.contents.childrenIds.findIndex((id) =>
+          isChildren(BE1, this.getBEById(id))
         );
+
         if (index > -1) return true;
       }
     };
 
-    if (isChildren(BE, towards)) return 'CHILDREN';
+    if (isChildren(BE, towards)) return BE_RELATIONS.CHILDREN;
 
     // is BE1 parent of BE2
     const isParent = (BE1: DO_BE, BE2: DO_BE) => {
@@ -163,9 +174,9 @@ export class BEStore {
       if (!!parent && isParent(BE1, parent)) return true;
     };
 
-    if (isParent(BE, towards)) return 'PARENT';
+    if (isParent(BE, towards)) return BE_RELATIONS.PARENT;
 
-    return 'NONE';
+    return BE_RELATIONS.NONE;
   }
 
   BETypeGuards = {
