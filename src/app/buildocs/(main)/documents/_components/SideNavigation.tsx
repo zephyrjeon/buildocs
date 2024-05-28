@@ -10,10 +10,9 @@ import {
   Trash,
 } from 'lucide-react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import { ElementRef, useEffect, useRef, useState } from 'react';
+import React, { ElementRef, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 import { toast } from 'sonner';
-
 import { cn } from '@/lib/utils';
 import {
   Popover,
@@ -23,15 +22,15 @@ import {
 // import { useSearch } from "@/hooks/use-search";
 import { useSettings } from '@/hooks/use-settings';
 
-import { UserItem } from './user-item';
 import { Item } from './item';
 import { DocumentList } from './document-list';
 import { Navbar } from './navbar';
+import { NavUserItem } from './navUserItem';
 // import { Item } from "./item";
 // import { DocumentList } from "./document-list";
 // import { TrashBox } from "./trash-box";
 
-export const Navigation = () => {
+export const SideNavigation = () => {
   const router = useRouter();
   const settings = useSettings();
   // const search = useSearch();
@@ -40,11 +39,11 @@ export const Navigation = () => {
   const pathname = usePathname();
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  const isResizingRef = useRef(false);
-  const sidebarRef = useRef<ElementRef<'aside'>>(null);
-  const navbarRef = useRef<ElementRef<'div'>>(null);
-  const [isResetting, setIsResetting] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(isMobile);
+  const isResizingRef = React.useRef(false);
+  const sidebarRef = React.useRef<React.ElementRef<'aside'>>(null);
+  const navbarRef = React.useRef<React.ElementRef<'div'>>(null);
+  const [isResetting, setIsResetting] = React.useState(false);
+  const [isCollapsed, setIsCollapsed] = React.useState(isMobile);
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -118,7 +117,7 @@ export const Navigation = () => {
     // });
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isMobile) {
       handleCollapse();
     } else {
@@ -126,7 +125,7 @@ export const Navigation = () => {
     }
   }, [isMobile]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isMobile) {
       handleCollapse();
     }
@@ -153,7 +152,7 @@ export const Navigation = () => {
           <ChevronsLeft className="h-6 w-6" />
         </div>
         <div>
-          <UserItem />
+          <NavUserItem />
           <Item label="Search" icon={Search} isSearch onClick={() => {}} />
           <Item label="Settings" icon={Settings} onClick={settings.onOpen} />
           <Item label="New page" icon={PlusCircle} onClick={handleCreate} />

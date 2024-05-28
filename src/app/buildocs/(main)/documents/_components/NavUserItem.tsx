@@ -12,9 +12,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-export const UserItem = () => {
+export const NavUserItem = () => {
   const user = {
-    fullName: ' John Tester',
+    fullName: 'The Tester',
     emailAddresses: [{ emailAddress: 'email@test.com' }],
     imageUrl: '',
   };
@@ -24,14 +24,14 @@ export const UserItem = () => {
       <DropdownMenuTrigger asChild>
         <div
           role="button"
-          className="flex items-center text-sm p-3 w-full hover:bg-primary/5"
+          className="flex items-center text-sm p-3 hover:bg-primary/ mr-10"
         >
-          <div className="gap-x-2 flex items-center max-w-[150px]">
+          <div className="gap-x-2 flex items-center">
             <Avatar className="h-5 w-5">
               <AvatarImage src={user?.imageUrl} />
             </Avatar>
             <span className="text-start font-medium line-clamp-1">
-              {user?.fullName}&apos;s Jotion
+              {user?.fullName}&apos;s Buildocs
             </span>
           </div>
           <ChevronsLeftRight className="rotate-90 ml-2 text-muted-foreground h-4 w-4" />
@@ -55,7 +55,7 @@ export const UserItem = () => {
             </div>
             <div className="space-y-1">
               <p className="text-sm line-clamp-1">
-                {user?.fullName}&apos;s Jotion
+                {user?.fullName}&apos;s Buildocs
               </p>
             </div>
           </div>
@@ -65,7 +65,7 @@ export const UserItem = () => {
           asChild
           className="w-full cursor-pointer text-muted-foreground"
         >
-          <div>Log out button</div>
+          <div>Log out</div>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
