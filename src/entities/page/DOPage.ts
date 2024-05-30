@@ -1,14 +1,22 @@
-import { IDOBaseBlockElement, BE_TAGS } from '../blockElement/BEInterfaces';
+import { IDOBaseBE } from '../blockElement/BEInterfaces';
 import { IDOPage } from './PageInterfaces';
 
-export class DOPag implements IDOPage {
+export class DOPage implements IDOPage {
   id: string;
-  name: string;
-  blockElements: IDOBaseBlockElement<BE_TAGS>[];
+  documentId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  order: number;
+  title: string;
+  blockElements: IDOBaseBE[];
 
   constructor(data: IDOPage) {
     this.id = data.id;
-    this.name = data.name ?? 'Untitled';
-    this.blockElements = data.blockElements;
+    this.documentId = data.documentId;
+    this.createdAt = data.createdAt;
+    this.updatedAt = data.updatedAt;
+    this.order = data.order;
+    this.title = data.title ?? 'Untitled';
+    this.blockElements = data.blockElements ?? [];
   }
 }

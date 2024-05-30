@@ -1,7 +1,11 @@
-import { BE_TAGS, IDOBaseBlockElement } from '../blockElement/BEInterfaces';
+import { IDOBaseBE } from '../blockElement/BEInterfaces';
 
 export interface IDOPage {
   id: string;
-  name?: string;
-  blockElements: IDOBaseBlockElement<BE_TAGS>[];
+  documentId: string;
+  title?: string;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+  blockElements: IDOBaseBE[];
 }

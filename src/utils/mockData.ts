@@ -31,7 +31,7 @@ export const mockBEData1: IDOBaseBE[] = [
     tag: APP_ENUMS.BE_TAGS.TEXT,
     parentId: 'be2',
     contents: {
-      innerText: `test\n paragragh\n &lt;span&gt;'g'&lt;/span&gt; paragraph</span>`,
+      innerText: `test text1`,
     },
   },
   {
@@ -47,7 +47,7 @@ export const mockBEData1: IDOBaseBE[] = [
     tag: APP_ENUMS.BE_TAGS.TEXT,
     parentId: 'be4',
     contents: {
-      innerText: `test paragragh <span>paragraph2</span> &lt;p&gt;Hi &lt;/p&gt;`,
+      innerText: `test text2`,
     },
   },
 ];

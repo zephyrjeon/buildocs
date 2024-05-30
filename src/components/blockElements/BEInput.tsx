@@ -34,7 +34,7 @@ export const BEInput = (props: IBEInputProps) => {
   };
 
   return (
-    <div className="p-2 m-2 border-2 border-gray-700">
+    <div className="p-2 border-2 border-gray-800">
       <div className="flex">
         <BETagDropdown
           onSelectTag={handleSelectTag}

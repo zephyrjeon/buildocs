@@ -1,26 +1,20 @@
 'use client';
 
+import { Utils } from '@/utils/Utils';
+import { mockMyDocuments } from '@/utils/mockData';
+import { FileIcon } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { FileIcon } from 'lucide-react';
-
-import { cn } from '@/lib/utils';
-
-import { NavItem } from './NavItem';
-import { mockMyDocuments } from '@/utils/mockData';
 import { DocumentItem } from './DocumentItem';
+import { NavItem } from './NavItem';
 import { PageList } from './PageList';
 
 interface DocumentListProps {
   parentDocumentId?: any;
-  level?: number;
   data?: any[];
 }
 
-export const DocumentList = ({
-  parentDocumentId,
-  level = 0,
-}: DocumentListProps) => {
+export const DocumentList = (props: DocumentListProps) => {
   const params = useParams();
   const router = useRouter();
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
@@ -32,52 +26,32 @@ export const DocumentList = ({
     }));
   };
 
-  // const documents = useQuery(api.documents.getSidebar, {
-  //   parentDocument: parentDocumentId
-  // });
   const documents = mockMyDocuments;
 
-  const onRedirect = (documentId: string) => {
-    router.push(`/documents/${documentId}`);
+  const onRedirect = (document: any) => {
+    router.push(`${Utils.URLs.pagesURL(document.id, document.pages[0].id)}`);
   };
 
   if (documents === undefined) {
     return (
       <>
-        <NavItem.Skeleton level={level} />
-        {level === 0 && (
-          <>
-            <NavItem.Skeleton level={level} />
-            <NavItem.Skeleton level={level} />
-          </>
-        )}
+        <NavItem.Skeleton />
+        <NavItem.Skeleton />
+        <NavItem.Skeleton />
       </>
     );
   }
 
   return (
     <>
-      <p
-        style={{
-          paddingLeft: level ? `${level * 12 + 25}px` : undefined,
-        }}
-        className={cn(
-          'hidden text-sm font-medium text-muted-foreground/80',
-          expanded && 'last:block',
-          level === 0 && 'hidden'
-        )}
-      >
-        No pages inside
-      </p>
       {documents.map((document) => (
         <div key={document.id}>
           <DocumentItem
             id={document.id}
-            onClick={() => onRedirect(document.id)}
+            onClick={() => onRedirect(document)}
             label={document.title}
             icon={FileIcon}
             active={params.documentId === document.id}
-            level={level}
             onExpand={() => onExpand(document.id)}
             expanded={expanded[document.id]}
           />
