@@ -1,16 +1,14 @@
 'use client';
 
-import { ChevronsLeftRight } from 'lucide-react';
-
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ChevronsLeftRight, CircleUser } from 'lucide-react';
 
 export const NavUserItem = () => {
   const user = {
@@ -28,7 +26,8 @@ export const NavUserItem = () => {
         >
           <div className="gap-x-2 flex items-center">
             <Avatar className="h-5 w-5">
-              <AvatarImage src={user?.imageUrl} />
+              {user?.imageUrl && <AvatarImage src={user.imageUrl} />}
+              {!user?.imageUrl && <CircleUser className="h-5 w-5" />}
             </Avatar>
             <span className="text-start font-medium line-clamp-1">
               {user?.fullName}&apos;s Buildocs

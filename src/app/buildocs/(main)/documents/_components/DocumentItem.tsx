@@ -7,12 +7,17 @@ import {
   MoreHorizontal,
   Plus,
   Trash,
+  Book,
 } from 'lucide-react';
+// import { useMutation } from "convex/react";
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+// import { useUser } from "@clerk/clerk-react";
 
+// import { Id } from "@/convex/_generated/dataModel";
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
+// import { api } from "@/convex/_generated/api";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -21,8 +26,8 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 
-interface ItemProps {
-  id?: any;
+interface IDocumenttemProps {
+  id?: string;
   documentIcon?: string;
   active?: boolean;
   expanded?: boolean;
@@ -34,7 +39,7 @@ interface ItemProps {
   icon: LucideIcon;
 }
 
-export const Item = ({
+export const DocumentItem = ({
   id,
   label,
   onClick,
@@ -45,24 +50,26 @@ export const Item = ({
   level = 0,
   onExpand,
   expanded,
-}: ItemProps) => {
-  const router = useRouter();
+}: IDocumenttemProps) => {
+  // const { user } = useUser();
   const user = {
-    fullName: 'John Tester',
+    fullName: 'tester',
   };
-  const create = async (arg: any) => {};
-  const archive = async (arg: any) => {};
+  const router = useRouter();
+  // const create = useMutation(api.documents.create);
+  // const archive = useMutation(api.documents.archive);
 
   const onArchive = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     if (!id) return;
-    const promise = archive({ id }).then(() => router.push('/documents'));
+    // const promise = archive({ id })
+    //   .then(() => router.push("/documents"))
 
-    toast.promise(promise, {
-      loading: 'Moving to trash...',
-      success: 'Note moved to trash!',
-      error: 'Failed to archive note.',
-    });
+    // toast.promise(promise, {
+    //   loading: "Moving to trash...",
+    //   success: "Note moved to trash!",
+    //   error: "Failed to archive note."
+    // });
   };
 
   const handleExpand = (
@@ -75,20 +82,19 @@ export const Item = ({
   const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     if (!id) return;
-    const promise = create({ title: 'Untitled', parentDocument: id }).then(
-      (documentId) => {
-        if (!expanded) {
-          onExpand?.();
-        }
-        router.push(`/documents/${documentId}`);
-      }
-    );
+    // const promise = create({ title: "Untitled", parentDocument: id })
+    //   .then((documentId) => {
+    //     if (!expanded) {
+    //       onExpand?.();
+    //     }
+    //     router.push(`/documents/${documentId}`);
+    //   });
 
-    toast.promise(promise, {
-      loading: 'Creating a new note...',
-      success: 'New note created!',
-      error: 'Failed to create a new note.',
-    });
+    // toast.promise(promise, {
+    //   loading: "Creating a new note...",
+    //   success: "New note created!",
+    //   error: "Failed to create a new note."
+    // });
   };
 
   const ChevronIcon = expanded ? ChevronDown : ChevronRight;
@@ -114,11 +120,9 @@ export const Item = ({
           <ChevronIcon className="h-4 w-4 shrink-0 text-muted-foreground/50" />
         </div>
       )}
-      {documentIcon ? (
-        <div className="shrink-0 mr-2 text-[18px]">{documentIcon}</div>
-      ) : (
-        <Icon className="shrink-0 h-[18px] w-[18px] mr-2 text-muted-foreground" />
-      )}
+
+      <Book className="shrink-0 h-[18px] w-[18px] mr-2 text-muted-foreground" />
+
       <span className="truncate">{label}</span>
       {isSearch && (
         <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
@@ -165,7 +169,7 @@ export const Item = ({
   );
 };
 
-Item.Skeleton = function ItemSkeleton({ level }: { level?: number }) {
+DocumentItem.Skeleton = function ItemSkeleton({ level }: { level?: number }) {
   return (
     <div
       style={{

@@ -6,7 +6,10 @@ import { FileIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
-import { Item } from './item';
+import { NavItem } from './NavItem';
+import { mockMyDocuments } from '@/utils/mockData';
+import { DocumentItem } from './DocumentItem';
+import { PageList } from './PageList';
 
 interface DocumentListProps {
   parentDocumentId?: any;
@@ -32,7 +35,7 @@ export const DocumentList = ({
   // const documents = useQuery(api.documents.getSidebar, {
   //   parentDocument: parentDocumentId
   // });
-  const documents = undefined;
+  const documents = mockMyDocuments;
 
   const onRedirect = (documentId: string) => {
     router.push(`/documents/${documentId}`);
@@ -41,11 +44,11 @@ export const DocumentList = ({
   if (documents === undefined) {
     return (
       <>
-        <Item.Skeleton level={level} />
+        <NavItem.Skeleton level={level} />
         {level === 0 && (
           <>
-            <Item.Skeleton level={level} />
-            <Item.Skeleton level={level} />
+            <NavItem.Skeleton level={level} />
+            <NavItem.Skeleton level={level} />
           </>
         )}
       </>
@@ -66,27 +69,21 @@ export const DocumentList = ({
       >
         No pages inside
       </p>
-      {/* {documents.map((document:any) => (
-        <div key={document._id}>
-          <Item
-            id={document._id}
-            onClick={() => onRedirect(document._id)}
+      {documents.map((document) => (
+        <div key={document.id}>
+          <DocumentItem
+            id={document.id}
+            onClick={() => onRedirect(document.id)}
             label={document.title}
             icon={FileIcon}
-            documentIcon={document.icon}
-            active={params.documentId === document._id}
+            active={params.documentId === document.id}
             level={level}
-            onExpand={() => onExpand(document._id)}
-            expanded={expanded[document._id]}
+            onExpand={() => onExpand(document.id)}
+            expanded={expanded[document.id]}
           />
-          {expanded[document._id] && (
-            <DocumentList
-              parentDocumentId={document._id}
-              level={level + 1}
-            />
-          )}
+          {expanded[document.id] && <PageList />}
         </div>
-      ))} */}
+      ))}
     </>
   );
 };

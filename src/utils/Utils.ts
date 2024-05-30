@@ -3,7 +3,7 @@ export const Utils = {
     rootURL: '/buildocs',
     documentsURL: '/buildocs/documents',
     pagesURL: (documentId: string, pageId: string) =>
-      `/buildocs/documents/${documentId}/pages/${pageId}`,
+      `${Utils.URLs.documentsURL}/${documentId}/pages/${pageId}`,
   },
 
   deepFreeze: <T extends { [key: string]: any }>(obj: T): T => {

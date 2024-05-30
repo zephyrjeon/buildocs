@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-import { SettingsModal } from '@/components/modals/settings-modal';
+import { SettingsModal } from '@/components/modals/SettingsModal';
 import { CoverImageModal } from '@/components/modals/cover-image-modal';
 
 export const ModalProvider = () => {

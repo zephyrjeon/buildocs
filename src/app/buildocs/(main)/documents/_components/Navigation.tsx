@@ -1,8 +1,13 @@
 'use client';
 
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import {
   ChevronsLeft,
-  MenuIcon,
   Plus,
   PlusCircle,
   Search,
@@ -10,27 +15,23 @@ import {
   Trash,
 } from 'lucide-react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import React, { ElementRef, useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { useMediaQuery } from 'usehooks-ts';
-import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from '@/components/ui/popover';
 // import { useSearch } from "@/hooks/use-search";
-import { useSettings } from '@/hooks/use-settings';
 
-import { Item } from './item';
-import { DocumentList } from './document-list';
-import { Navbar } from './navbar';
-import { NavUserItem } from './navUserItem';
+import { useSettings } from '@/hooks/useSettings';
+import { NavItem } from './NavItem';
+import { NavUserItem } from './NavUserItem';
+import { Topbar } from './TopBar';
+import { DocumentList } from './DocumentList';
 // import { Item } from "./item";
 // import { DocumentList } from "./document-list";
 // import { TrashBox } from "./trash-box";
 
-export const SideNavigation = () => {
+const MIN_NAV_WIDTH = 240;
+const MAX_NAV_WIDTH = 480;
+
+export const NavBar = () => {
   const router = useRouter();
   const settings = useSettings();
   // const search = useSearch();
@@ -41,33 +42,30 @@ export const SideNavigation = () => {
 
   const isResizingRef = React.useRef(false);
   const sidebarRef = React.useRef<React.ElementRef<'aside'>>(null);
-  const navbarRef = React.useRef<React.ElementRef<'div'>>(null);
+  const topbarRef = React.useRef<React.ElementRef<'div'>>(null);
   const [isResetting, setIsResetting] = React.useState(false);
   const [isCollapsed, setIsCollapsed] = React.useState(isMobile);
 
-  const handleMouseDown = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    event.stopPropagation();
-
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault();
+    e.stopPropagation();
     isResizingRef.current = true;
     document.addEventListener('mousemove', handleDrag);
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-  const handleDrag = (event: MouseEvent) => {
+  const handleDrag = (e: MouseEvent) => {
     if (!isResizingRef.current) return;
 
-    let newWidth = event.clientX;
+    let newWidth = e.clientX;
 
-    if (newWidth < 240) newWidth = 240;
-    if (newWidth > 480) newWidth = 480;
+    if (newWidth < MIN_NAV_WIDTH) newWidth = MIN_NAV_WIDTH;
+    if (newWidth > MAX_NAV_WIDTH) newWidth = MAX_NAV_WIDTH;
 
-    if (sidebarRef.current && navbarRef.current) {
+    if (sidebarRef.current && topbarRef.current) {
       sidebarRef.current.style.width = `${newWidth}px`;
-      navbarRef.current.style.setProperty('left', `${newWidth}px`);
-      navbarRef.current.style.setProperty(
+      topbarRef.current.style.setProperty('left', `${newWidth}px`);
+      topbarRef.current.style.setProperty(
         'width',
         `calc(100% - ${newWidth}px)`
       );
@@ -80,29 +78,32 @@ export const SideNavigation = () => {
     document.removeEventListener('mouseup', handleMouseUp);
   };
 
-  const resetWidth = () => {
-    if (sidebarRef.current && navbarRef.current) {
+  const resetNavWidth = () => {
+    if (sidebarRef.current && topbarRef.current) {
       setIsCollapsed(false);
       setIsResetting(true);
 
-      sidebarRef.current.style.width = isMobile ? '100%' : '240px';
-      navbarRef.current.style.setProperty(
+      sidebarRef.current.style.width = isMobile ? '100%' : `${MIN_NAV_WIDTH}px`;
+      topbarRef.current.style.setProperty(
         'width',
-        isMobile ? '0' : 'calc(100% - 240px)'
+        isMobile ? '0' : `calc(100% - ${MIN_NAV_WIDTH}px)`
       );
-      navbarRef.current.style.setProperty('left', isMobile ? '100%' : '240px');
+      topbarRef.current.style.setProperty(
+        'left',
+        isMobile ? '100%' : `${MIN_NAV_WIDTH}px`
+      );
       setTimeout(() => setIsResetting(false), 300);
     }
   };
 
   const handleCollapse = () => {
-    if (sidebarRef.current && navbarRef.current) {
+    if (sidebarRef.current && topbarRef.current) {
       setIsCollapsed(true);
       setIsResetting(true);
 
       sidebarRef.current.style.width = '0';
-      navbarRef.current.style.setProperty('width', '100%');
-      navbarRef.current.style.setProperty('left', '0');
+      topbarRef.current.style.setProperty('width', '100%');
+      topbarRef.current.style.setProperty('left', '0');
       setTimeout(() => setIsResetting(false), 300); // transition time on aside element
     }
   };
@@ -121,7 +122,7 @@ export const SideNavigation = () => {
     if (isMobile) {
       handleCollapse();
     } else {
-      resetWidth();
+      resetNavWidth();
     }
   }, [isMobile]);
 
@@ -136,7 +137,7 @@ export const SideNavigation = () => {
       <aside
         ref={sidebarRef}
         className={cn(
-          'group/sidebar h-full bg-secondary overflow-y-auto relative flex w-60 flex-col z-[99999]',
+          `group/sidebar h-full bg-secondary overflow-y-auto relative flex w-[${MIN_NAV_WIDTH}px] flex-col z-[99999]`,
           isResetting && 'transition-all ease-in-out duration-300',
           isMobile && 'w-0'
         )}
@@ -153,16 +154,19 @@ export const SideNavigation = () => {
         </div>
         <div>
           <NavUserItem />
-          <Item label="Search" icon={Search} isSearch onClick={() => {}} />
-          <Item label="Settings" icon={Settings} onClick={settings.onOpen} />
-          <Item label="New page" icon={PlusCircle} onClick={handleCreate} />
+          <NavItem label="Search" icon={Search} isSearch onClick={() => {}} />
+          <NavItem label="Settings" icon={Settings} onClick={settings.onOpen} />
+          <NavItem
+            label="New Document"
+            icon={PlusCircle}
+            onClick={handleCreate}
+          />
         </div>
         <div className="mt-4">
           <DocumentList />
-          <Item onClick={handleCreate} icon={Plus} label="Add a page" />
           <Popover>
             <PopoverTrigger className="w-full mt-4">
-              <Item label="Trash" icon={Trash} />
+              <NavItem label="Trash" icon={Trash} />
             </PopoverTrigger>
             <PopoverContent
               className="p-0 w-72"
@@ -175,31 +179,20 @@ export const SideNavigation = () => {
         </div>
         <div
           onMouseDown={handleMouseDown}
-          onClick={resetWidth}
+          onClick={resetNavWidth}
           className="opacity-0 group-hover/sidebar:opacity-100 transition cursor-ew-resize absolute h-full w-1 bg-primary/10 right-0 top-0"
         />
       </aside>
+
       <div
-        ref={navbarRef}
+        ref={topbarRef}
         className={cn(
-          'absolute top-0 z-[99999] left-60 w-[calc(100%-240px)]',
+          `absolute top-0 z-[99999] left-[${MIN_NAV_WIDTH}px] w-[calc(100%-${MIN_NAV_WIDTH}px)]`,
           isResetting && 'transition-all ease-in-out duration-300',
           isMobile && 'left-0 w-full'
         )}
       >
-        {!!params.documentId ? (
-          <Navbar isCollapsed={isCollapsed} onResetWidth={resetWidth} />
-        ) : (
-          <nav className="bg-transparent px-3 py-2 w-full">
-            {isCollapsed && (
-              <MenuIcon
-                onClick={resetWidth}
-                role="button"
-                className="h-6 w-6 text-muted-foreground"
-              />
-            )}
-          </nav>
-        )}
+        <Topbar isCollapsed={isCollapsed} onClickMenu={resetNavWidth} />
       </div>
     </>
   );

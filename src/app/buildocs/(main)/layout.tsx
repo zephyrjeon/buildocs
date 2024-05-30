@@ -3,7 +3,7 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
 import { Utils } from '../../../utils/Utils';
-import { SideNavigation } from './documents/_components/SideNavigation';
+import { NavBar } from './documents/_components/Navigation';
 
 interface IMainLayoutProps {
   children: React.ReactNode;
@@ -28,7 +28,7 @@ const MainLayout = (props: IMainLayoutProps) => {
 
   return (
     <div className="h-full flex dark:bg-[#1F1F1F]">
-      <SideNavigation />
+      <NavBar />
       <main className="flex-1 h-full overflow-y-auto">{children}</main>
     </div>
   );

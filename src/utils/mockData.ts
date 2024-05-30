@@ -52,7 +52,66 @@ export const mockBEData1: IDOBaseBE[] = [
   },
 ];
 
-const mockPage1 = {
+export const mockPage1 = {
   id: 'page1',
-  be: mockBEData1,
+  documentId: 'docu1',
+  title: 'mockPage1 title',
+  order: 0,
+  createdAt: '',
+  updatedAt: '',
+  be: JSON.stringify(mockBEData1),
 };
+
+export const mockPage2 = {
+  id: 'page2',
+  documentId: 'docu1',
+  title: 'mockPage2 title',
+  order: 1,
+  createdAt: '',
+  updatedAt: '',
+  be: '',
+};
+
+export const mockPage3 = {
+  id: 'page3',
+  documentId: 'docu1',
+  title: 'mockPage3 title',
+  order: 2,
+  createdAt: '',
+  updatedAt: '',
+  be: '',
+};
+
+export const mockPage4 = {
+  id: 'page4',
+  documentId: 'docu2',
+  title: 'mockPage4 title',
+  order: 0,
+  createdAt: '',
+  updatedAt: '',
+  be: '',
+};
+
+export const mockPages = [mockPage1, mockPage2, mockPage3];
+
+export const mockDocument1 = {
+  id: 'docu1',
+  authorId: 'userid1',
+  title: 'My first document',
+  order: 0,
+  createdAt: '',
+  updatedAt: '',
+  pages: mockPages,
+};
+
+export const mockDocument2 = {
+  id: 'docu2',
+  authorId: 'userid1',
+  title: 'My second document',
+  order: 1,
+  createdAt: '',
+  updatedAt: '',
+  pages: [mockPage4],
+};
+
+export const mockMyDocuments = [mockDocument1, mockDocument2];
