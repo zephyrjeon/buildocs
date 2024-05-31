@@ -1,4 +1,4 @@
-import { IDOPage } from '../page/PageInterfaces';
+import { DOPage } from '../page/DOPage';
 import { IDODocument } from './DocumentInterfaces';
 
 export class DODocument implements IDODocument {
@@ -7,8 +7,8 @@ export class DODocument implements IDODocument {
   createdAt: Date;
   updatedAt: Date;
   order: number;
-  title?: string | undefined;
-  pages: IDOPage[];
+  title: string;
+  pages: DOPage[];
 
   constructor(data: IDODocument) {
     this.id = data.id;
@@ -17,6 +17,6 @@ export class DODocument implements IDODocument {
     this.updatedAt = data.updatedAt;
     this.order = data.order;
     this.title = data.title ?? 'Untitled';
-    this.pages = data.pages ?? [];
+    this.pages = data.pages.map((page) => new DOPage(page)) ?? [];
   }
 }

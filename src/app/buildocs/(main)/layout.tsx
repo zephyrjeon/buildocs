@@ -3,7 +3,8 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
 import { Utils } from '../../../utils/Utils';
-import { NavBar } from './documents/_components/Navigation';
+import { Navigation } from './documents/_components/Navigation';
+import { useStore } from '@/stores/RootStore';
 
 interface IMainLayoutProps {
   children: React.ReactNode;
@@ -11,8 +12,15 @@ interface IMainLayoutProps {
 
 const MainLayout = (props: IMainLayoutProps) => {
   const { children } = props;
+  const store = useStore();
   const isAuthenticated = true;
   const isLoading = false;
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      store.documentStore.loadMyDocumentList();
+    }
+  }, [isAuthenticated, store.documentStore]);
 
   if (isLoading) {
     return (
@@ -28,7 +36,7 @@ const MainLayout = (props: IMainLayoutProps) => {
 
   return (
     <div className="h-full flex dark:bg-[#1F1F1F]">
-      <NavBar />
+      <Navigation />
       <main className="flex-1 h-full overflow-y-auto">{children}</main>
     </div>
   );

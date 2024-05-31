@@ -1,67 +1,33 @@
-import { promises as fs } from 'fs';
-import { mockBEData1 } from '@/utils/mockData';
-import { RootStore } from './RootStore';
+import { DOPage } from '@/entities/page/DOPage';
 import { create } from 'zustand';
+import { RootStore } from './RootStore';
 
-const mockPage1 = {
-  id: 'page1',
-  be: mockBEData1,
-};
-
-interface IDocument {
-  id: string;
-  userId: string;
-  landingPageId: string;
+enum SET_STATE_ACTIONS {
+  ADD = 'ADD',
+  REMOVE = 'REMOVE',
 }
 
-interface IPage {
-  id: string;
-  be: string;
-  children: [];
-}
-
-interface IDOPage {
-  id: string;
-  be: string;
-}
-
-interface IPageState {
-  page: { [id: string]: IPage };
-  update: (id: number, newBe: string) => void;
+interface IState {
+  [id: string]: DOPage;
 }
 
 export class PageStore {
   private rootStore: RootStore;
-  private usePageStore = create<IPageState>()((set, get) => ({
-    page: {},
-    update: (id, newBe) => {
-      set((state) => ({ ...state, [id]: newBe }));
-    },
-  }));
 
-  rawData = {
-    page1: {
-      id: 'page1',
-      be: JSON.stringify(mockBEData1),
-    },
-  };
+  // Do not access Zustand state direclty, use useState, getState or setState methods to access state
+  private state = create<IState>()(() => ({}));
+
+  // This is a react hook. When state updated, rerender tirggered by Zustand. Use these use[...] methods only for UI
+  private get useState() {
+    return this.state();
+  }
+
+  // Access state without calling a hook
+  private get getState() {
+    return this.state.getState();
+  }
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
-  }
-
-  getPageById(id: string) {
-    const data = this.usePageStore.getState().page[id].be;
-    this.rootStore.BEStore.parseBEs(data);
-  }
-
-  // action works!
-  update(id: number, newBe: string) {
-    this.usePageStore.getState().update(id, newBe);
-  }
-
-  // component updated !
-  get page() {
-    return this.usePageStore().page;
   }
 }

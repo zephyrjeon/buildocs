@@ -110,7 +110,7 @@ export class BEStore {
     if (BE instanceof DOBaseBlockElement) {
       this.setState(SET_STATE_ACTIONS.ADD, BE);
     } else {
-      this.setState(SET_STATE_ACTIONS.ADD, this.instantiateBE(BE));
+      this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(BE));
     }
 
     return this.getBEById(BE.id);
@@ -123,10 +123,10 @@ export class BEStore {
   parseBEs(rawData: string) {
     const jsonParsed: IDOBaseBE[] = JSON.parse(rawData);
 
-    jsonParsed.map((BE) => this.setBE(this.instantiateBE(BE)));
+    jsonParsed.map((BE) => this.setBE(this.instantiateDO(BE)));
   }
 
-  instantiateBE(BE: IDOBaseBE) {
+  instantiateDO(BE: IDOBaseBE) {
     switch (BE.tag) {
       case APP_ENUMS.BE_TAGS.ROOT:
         return Utils.deepFreeze(new DORootBE(BE as IDORootBE));

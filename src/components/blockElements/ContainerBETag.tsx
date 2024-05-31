@@ -11,7 +11,7 @@ export const ContainerBETag = (props: IContainerBETagProps) => {
   const { data, children } = props;
   return (
     <BaseBETag isEditable BE={data}>
-      <div className="h-40">{children}</div>
+      <div className="min-h-40">{children}</div>
     </BaseBETag>
   );
 };

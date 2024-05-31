@@ -324,6 +324,6 @@ export class BEEditorStore {
       }
     });
 
-    return this.rootStore.BEStore.instantiateBE(newBE);
+    return this.rootStore.BEStore.instantiateDO(newBE);
   }
 }

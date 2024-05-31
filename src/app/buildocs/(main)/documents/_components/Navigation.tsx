@@ -24,6 +24,7 @@ import { NavItem } from './NavItem';
 import { NavUserItem } from './NavUserItem';
 import { Topbar } from './TopBar';
 import { DocumentList } from './DocumentList';
+import { useStore } from '@/stores/RootStore';
 // import { Item } from "./item";
 // import { DocumentList } from "./document-list";
 // import { TrashBox } from "./trash-box";
@@ -31,7 +32,8 @@ import { DocumentList } from './DocumentList';
 const MIN_NAV_WIDTH = 240;
 const MAX_NAV_WIDTH = 480;
 
-export const NavBar = () => {
+export const Navigation = () => {
+  const store = useStore();
   const router = useRouter();
   const settings = useSettings();
   // const search = useSearch();
@@ -124,13 +126,13 @@ export const NavBar = () => {
     } else {
       resetNavWidth();
     }
-  }, [isMobile]);
+  }, [isMobile, resetNavWidth, handleCollapse]);
 
   React.useEffect(() => {
     if (isMobile) {
       handleCollapse();
     }
-  }, [pathname, isMobile]);
+  }, [pathname, isMobile, handleCollapse]);
 
   return (
     <>

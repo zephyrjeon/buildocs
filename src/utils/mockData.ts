@@ -1,5 +1,6 @@
 import { APP_ENUMS } from '@/common/enums';
 import { IDOBaseBE } from '@/entities/blockElement/BEInterfaces';
+import { IDOPage } from '@/entities/page/PageInterfaces';
 
 export const mockBEData1: IDOBaseBE[] = [
   {
@@ -47,19 +48,19 @@ export const mockBEData1: IDOBaseBE[] = [
     tag: APP_ENUMS.BE_TAGS.TEXT,
     parentId: 'be4',
     contents: {
-      innerText: `test text2`,
+      innerText: `Drag and Drop me`,
     },
   },
 ];
 
-export const mockPage1 = {
+export const mockPage1: IDOPage = {
   id: 'page1',
   documentId: 'docu1',
   title: 'mockPage1 title',
   order: 0,
-  createdAt: '',
-  updatedAt: '',
-  be: JSON.stringify(mockBEData1),
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  blockElements: mockBEData1,
 };
 
 export const mockPage2 = {
@@ -67,9 +68,9 @@ export const mockPage2 = {
   documentId: 'docu1',
   title: 'mockPage2 title',
   order: 1,
-  createdAt: '',
-  updatedAt: '',
-  be: '',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  blockElements: [],
 };
 
 export const mockPage3 = {
@@ -77,9 +78,9 @@ export const mockPage3 = {
   documentId: 'docu1',
   title: 'mockPage3 title',
   order: 2,
-  createdAt: '',
-  updatedAt: '',
-  be: '',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  blockElements: [],
 };
 
 export const mockPage4 = {
@@ -87,9 +88,9 @@ export const mockPage4 = {
   documentId: 'docu2',
   title: 'mockPage4 title',
   order: 0,
-  createdAt: '',
-  updatedAt: '',
-  be: '',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  blockElements: [],
 };
 
 export const mockPages = [mockPage1, mockPage2, mockPage3];
@@ -99,8 +100,8 @@ export const mockDocument1 = {
   authorId: 'userid1',
   title: 'My first document',
   order: 0,
-  createdAt: '',
-  updatedAt: '',
+  createdAt: new Date(),
+  updatedAt: new Date(),
   pages: mockPages,
 };
 
@@ -109,8 +110,8 @@ export const mockDocument2 = {
   authorId: 'userid1',
   title: 'My second document',
   order: 1,
-  createdAt: '',
-  updatedAt: '',
+  createdAt: new Date(),
+  updatedAt: new Date(),
   pages: [mockPage4],
 };
 

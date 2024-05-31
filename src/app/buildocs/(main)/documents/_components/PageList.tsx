@@ -1,18 +1,22 @@
 import { mockPages } from '@/utils/mockData';
 import { useRouter } from 'next/navigation';
 import { PageItem } from './PageItem';
+import { DOPage } from '@/entities/page/DOPage';
+import { Utils } from '@/utils/Utils';
 
-interface IPageListProps {}
+interface IPageListProps {
+  pages: DOPage[];
+}
 
 export const PageList = (props: IPageListProps) => {
-  const {} = props;
+  const { pages } = props;
 
   const router = useRouter();
 
-  const pages = mockPages;
-
-  const onRedirect = (documentId: string) => {
-    router.push(`/documents/${documentId}`);
+  const onRedirect = (documentId: string, pageId: string) => {
+    router.push(`${Utils.URLs.pagesURL(documentId, pageId)}`);
+    // http://localhost:3000/buildocs/documents/docu1/pages/page1
+    // http://localhost:3000/documents/page1/pages/temp1
   };
 
   return (
@@ -28,7 +32,7 @@ export const PageList = (props: IPageListProps) => {
           className="ml-10 border-l-2 border-muted-foreground/10"
         >
           <PageItem
-            onClick={() => onRedirect(page.id)}
+            onClick={() => onRedirect(page.documentId, page.id)}
             onArchive={() => {}}
             page={page}
           />
