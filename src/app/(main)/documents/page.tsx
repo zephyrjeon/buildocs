@@ -5,7 +5,9 @@ import { PlusCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Utils } from '../../../../utils/Utils';
+import { Utils } from '../../../utils/Utils';
+import empty from '../../../../public/empty.png';
+import emptyDark from '../../../../public/empty-dark.png';
 
 const DocumentsPage = () => {
   const router = useRouter();
@@ -31,14 +33,14 @@ const DocumentsPage = () => {
     <div className="h-full flex flex-col items-center justify-center space-y-4">
       <div className="flex-[2]" />
       <Image
-        src="/empty.png"
+        src={empty}
         height="400"
         width="400"
         alt="Empty"
         className="dark:hidden"
       />
       <Image
-        src="/empty-dark.png"
+        src={emptyDark}
         height="400"
         width="400"
         alt="Empty"

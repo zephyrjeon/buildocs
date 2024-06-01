@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 // import { Spinner } from "@/components/spinner";
 import { cn } from '@/lib/utils';
 import { Logo } from './logo';
-import { useIsScrolled } from '../../../../hooks/useIsScrolled';
-import { ThemeToggle } from '../../../../components/ThemeToggle';
+import { useIsScrolled } from '../../../hooks/useIsScrolled';
+import { ThemeToggle } from '../../../components/ThemeToggle';
 
 export const Navbar = () => {
   const isAuthenticated = true;

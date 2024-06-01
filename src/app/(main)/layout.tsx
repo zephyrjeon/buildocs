@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { redirect } from 'next/navigation';
-import { Utils } from '../../../utils/Utils';
+import { Utils } from '../../utils/Utils';
 import { Navigation } from './documents/_components/Navigation';
 import { useStore } from '@/stores/RootStore';
 

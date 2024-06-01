@@ -30,7 +30,7 @@ export const Heading = () => {
 
       {isAuthenticated && !isLoading && (
         <Button asChild className="py-6 pl-12 pr-10 text-lg">
-          <Link href="/buildocs/documents/">
+          <Link href="/documents/">
             Enter Buildocs
             <ArrowRight className="h-6 w-6 ml-2" />
           </Link>
