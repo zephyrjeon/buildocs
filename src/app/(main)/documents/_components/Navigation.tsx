@@ -111,6 +111,7 @@ export const Navigation = () => {
   };
 
   const handleCreate = () => {
+    store.documentStore.create();
     // const promise = create({ title: "Untitled" })
     //   .then((documentId) => router.push(`/documents/${documentId}`))
     // toast.promise(promise, {

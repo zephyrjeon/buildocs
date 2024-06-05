@@ -4,20 +4,25 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DODocument } from '@/entities/document/DODocument';
 import { cn } from '@/lib/utils';
+import { useStore } from '@/stores/RootStore';
 import {
   Book,
   ChevronDown,
   ChevronRight,
   MoreHorizontal,
   Plus,
+  SquarePen,
   Trash,
 } from 'lucide-react';
+import React from 'react';
 import { toast } from 'sonner';
 
 interface IDocumenttemProps {
@@ -30,11 +35,20 @@ interface IDocumenttemProps {
 
 export const DocumentItem = (props: IDocumenttemProps) => {
   const { onClick, isActive, onExpand, isExpanded, document } = props;
+  const [newTitle, setNewTitle] = React.useState(document.title);
+  const [isRenaming, setIsRenaming] = React.useState(false);
   const user = { fullName: 'tester' };
+  const store = useStore();
+
+  const handleRename = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
+    store.documentStore.rename(document, newTitle);
+  };
 
   const handleArchive = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     if (!document.id) return;
+    store.documentStore.remove(document);
     toast.message('Document Archived');
   };
 
@@ -69,6 +83,23 @@ export const DocumentItem = (props: IDocumenttemProps) => {
       </div>
       <Book className="shrink-0 h-[18px] w-[18px] mr-2 text-muted-foreground" />
       <span className="truncate">{document.title}</span>
+      <DropdownMenu open={isRenaming} onOpenChange={() => setIsRenaming(false)}>
+        <DropdownMenuTrigger></DropdownMenuTrigger>
+        <DropdownMenuContent className="w-60" align="start">
+          <DropdownMenuLabel>
+            <div className="flex items-center">
+              <Input
+                onChange={(e) => setNewTitle(e.target.value)}
+                value={newTitle}
+                className="h-8 mr-2"
+              />
+              <DropdownMenuItem onClick={handleRename}>
+                <SquarePen className="h-5 w-5 cursor-pointer" />
+              </DropdownMenuItem>
+            </div>
+          </DropdownMenuLabel>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <div className="ml-auto flex items-center gap-x-2">
         <DropdownMenu>
           <DropdownMenuTrigger onClick={(e) => e.stopPropagation()} asChild>
@@ -85,6 +116,10 @@ export const DocumentItem = (props: IDocumenttemProps) => {
             side="right"
             forceMount
           >
+            <DropdownMenuItem onClick={() => setIsRenaming(true)}>
+              <SquarePen className="h-4 w-4 mr-2" />
+              Rename
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={handleArchive}>
               <Trash className="h-4 w-4 mr-2" />
               Delete

@@ -4,6 +4,8 @@ import { DODocument } from '@/entities/document/DODocument';
 import { mockMyDocuments } from '@/utils/mockData';
 import { IDODocument } from '@/entities/document/DocumentInterfaces';
 import { Utils } from '@/utils/Utils';
+import ShortUniqueId from 'short-unique-id';
+import _ from 'lodash';
 
 enum SET_STATE_ACTIONS {
   ADD = 'ADD',
@@ -62,11 +64,41 @@ export class DocumentStore {
 
   loadMyDocumentList() {
     mockMyDocuments.forEach((docu) => {
-      this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDocument(docu));
+      this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(docu));
     });
   }
 
-  instantiateDocument(data: IDODocument) {
+  create() {
+    // TODO server api call
+    const newDocument: IDODocument = {
+      id: new ShortUniqueId({ length: 10 }).rnd(),
+      authorId: 'userId',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      order: this.getState.myDocumentList.length,
+      pages: [],
+    };
+
+    const DODocument = this.instantiateDO(newDocument);
+
+    this.setState(SET_STATE_ACTIONS.ADD, DODocument);
+  }
+
+  remove(document: DODocument) {
+    // TODO move document to archive
+    // TODO server api call
+    this.setState(SET_STATE_ACTIONS.REMOVE, document);
+  }
+
+  rename(document: DODocument, newTitle: string) {
+    const newDocument = _.cloneDeep(document);
+    newDocument.title = newTitle;
+    this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(newDocument));
+  }
+
+  update() {}
+
+  instantiateDO(data: IDODocument) {
     return Utils.deepFreeze(new DODocument(data));
   }
 }
