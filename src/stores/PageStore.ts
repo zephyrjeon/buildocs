@@ -1,14 +1,18 @@
 import { DOPage } from '@/entities/page/DOPage';
+import { IDOPage } from '@/entities/page/PageInterfaces';
+import { Utils } from '@/utils/Utils';
+import ShortUniqueId from 'short-unique-id';
 import { create } from 'zustand';
 import { RootStore } from './RootStore';
 
 enum SET_STATE_ACTIONS {
   ADD = 'ADD',
   REMOVE = 'REMOVE',
+  REMOVE_DOCUMENT = 'REMOVE_DOCUMENT',
 }
 
 interface IState {
-  [id: string]: DOPage;
+  [documentId: string]: DOPage[];
 }
 
 export class PageStore {
@@ -27,7 +31,64 @@ export class PageStore {
     return this.state.getState();
   }
 
+  private setState(action: SET_STATE_ACTIONS, page: DOPage) {
+    switch (action) {
+      case SET_STATE_ACTIONS.ADD:
+        return this.state.setState((state) => {
+          const prev = state[page.documentId];
+
+          if (prev) {
+            const filtered = prev.filter((p) => p.id !== page.id);
+            filtered.push(page);
+            return { ...state, [page.documentId]: filtered };
+          } else {
+            return { ...state, [page.documentId]: [page] };
+          }
+        });
+
+      case SET_STATE_ACTIONS.REMOVE:
+        return this.state.setState((state) => {
+          const prev = state[page.documentId];
+          const filtered = prev.filter((p) => p.id !== page.id);
+
+          return { ...state, [page.documentId]: filtered };
+        });
+    }
+  }
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
+  }
+
+  create(documentId: string) {
+    // TODO server api call
+    const newPage: IDOPage = {
+      id: new ShortUniqueId({ length: 10 }).rnd(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      order: this.getState[documentId]?.length ?? 0,
+      documentId,
+    };
+
+    const DOPage = this.instantiateDO(newPage);
+    this.setState(SET_STATE_ACTIONS.ADD, DOPage);
+    return DOPage;
+  }
+
+  // remove(page: DOPage) {
+  //   // TODO move page to archive
+  //   // TODO server api call
+  //   this.setState(SET_STATE_ACTIONS.REMOVE, page);
+  //   // remove new page from document.pages
+  // }
+
+  // rename(page: DOPage, newTitle: string) {
+  //   const newPage = _.cloneDeep(page);
+  //   newPage.title = newTitle;
+  //   this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(newPage));
+  // }
+
+  instantiateDO(data: IDOPage) {
+    return Utils.deepFreeze(new DOPage(data));
   }
 }

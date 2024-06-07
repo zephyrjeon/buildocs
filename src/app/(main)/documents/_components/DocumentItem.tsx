@@ -60,6 +60,7 @@ export const DocumentItem = (props: IDocumenttemProps) => {
   const createPage = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     if (!document.id) return;
+    store.documentStore.addNewPage(document.id);
     toast.message('New Page Created');
   };
 

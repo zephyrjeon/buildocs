@@ -60,7 +60,7 @@ export const mockPage1: IDOPage = {
   order: 0,
   createdAt: new Date(),
   updatedAt: new Date(),
-  blockElements: mockBEData1,
+  // blockElements: mockBEData1,
 };
 
 export const mockPage2 = {
@@ -70,7 +70,7 @@ export const mockPage2 = {
   order: 1,
   createdAt: new Date(),
   updatedAt: new Date(),
-  blockElements: [],
+  // blockElements: [],
 };
 
 export const mockPage3 = {
@@ -80,7 +80,7 @@ export const mockPage3 = {
   order: 2,
   createdAt: new Date(),
   updatedAt: new Date(),
-  blockElements: [],
+  // blockElements: [],
 };
 
 export const mockPage4 = {
@@ -90,7 +90,7 @@ export const mockPage4 = {
   order: 0,
   createdAt: new Date(),
   updatedAt: new Date(),
-  blockElements: [],
+  // blockElements: [],
 };
 
 export const mockPages = [mockPage1, mockPage2, mockPage3];

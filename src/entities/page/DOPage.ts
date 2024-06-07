@@ -1,4 +1,3 @@
-import { IDOBaseBE } from '../blockElement/BEInterfaces';
 import { IDOPage } from './PageInterfaces';
 
 export class DOPage implements IDOPage {
@@ -8,7 +7,6 @@ export class DOPage implements IDOPage {
   updatedAt: Date;
   order: number;
   title: string;
-  blockElements: IDOBaseBE[];
 
   constructor(data: IDOPage) {
     this.id = data.id;
@@ -17,6 +15,5 @@ export class DOPage implements IDOPage {
     this.updatedAt = data.updatedAt;
     this.order = data.order;
     this.title = data.title ?? 'Untitled';
-    this.blockElements = data.blockElements ?? [];
   }
 }

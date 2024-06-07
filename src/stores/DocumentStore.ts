@@ -1,11 +1,11 @@
-import { create } from 'zustand';
-import { RootStore } from './RootStore';
 import { DODocument } from '@/entities/document/DODocument';
-import { mockMyDocuments } from '@/utils/mockData';
 import { IDODocument } from '@/entities/document/DocumentInterfaces';
 import { Utils } from '@/utils/Utils';
-import ShortUniqueId from 'short-unique-id';
+import { mockMyDocuments } from '@/utils/mockData';
 import _ from 'lodash';
+import ShortUniqueId from 'short-unique-id';
+import { create } from 'zustand';
+import { RootStore } from './RootStore';
 
 enum SET_STATE_ACTIONS {
   ADD = 'ADD',
@@ -62,6 +62,14 @@ export class DocumentStore {
     return this.useState.myDocumentList;
   }
 
+  getMyDocumentById(documentId: string) {
+    const document = this.getState.myDocumentList.find(
+      (doc) => doc.id === documentId
+    );
+    if (!document) throw new Error('Document not found');
+    return document;
+  }
+
   loadMyDocumentList() {
     mockMyDocuments.forEach((docu) => {
       this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(docu));
@@ -85,7 +93,7 @@ export class DocumentStore {
   }
 
   remove(document: DODocument) {
-    // TODO move document to archive
+    // TODO move document and pages to archive
     // TODO server api call
     this.setState(SET_STATE_ACTIONS.REMOVE, document);
   }
@@ -93,8 +101,22 @@ export class DocumentStore {
   rename(document: DODocument, newTitle: string) {
     const newDocument = _.cloneDeep(document);
     newDocument.title = newTitle;
-    this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(newDocument));
+    const newDODocument = this.instantiateDO(newDocument);
+    this.setState(SET_STATE_ACTIONS.ADD, newDODocument);
   }
+
+  addNewPage(documentId: string) {
+    const page = this.rootStore.pageStore.create(documentId);
+    const document = this.getMyDocumentById(documentId);
+    const newDocument = _.cloneDeep(document);
+    newDocument.pages = newDocument.pages.filter((p) => p.id != page.id);
+    newDocument.pages.push(page);
+    newDocument.pages.sort((a, b) => a.order - b.order);
+    const newDODocument = this.instantiateDO(newDocument);
+    this.setState(SET_STATE_ACTIONS.ADD, newDODocument);
+  }
+
+  removePage() {}
 
   update() {}
 

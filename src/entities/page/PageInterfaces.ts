@@ -7,5 +7,4 @@ export interface IDOPage {
   order: number;
   createdAt: Date;
   updatedAt: Date;
-  blockElements: IDOBaseBE[];
 }

@@ -15,8 +15,6 @@ export const PageList = (props: IPageListProps) => {
 
   const onRedirect = (documentId: string, pageId: string) => {
     router.push(`${Utils.URLs.pagesURL(documentId, pageId)}`);
-    // http://localhost:3000/buildocs/documents/docu1/pages/page1
-    // http://localhost:3000/documents/page1/pages/temp1
   };
 
   return (
