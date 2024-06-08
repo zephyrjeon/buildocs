@@ -1,3 +1,4 @@
+import { DocumentStore } from '@/stores/DocumentStore';
 import { DOPage } from '../page/DOPage';
 import { IDODocument } from './DocumentInterfaces';
 
@@ -10,13 +11,15 @@ export class DODocument implements IDODocument {
   title: string;
   pages: DOPage[];
 
-  constructor(data: IDODocument) {
+  constructor(store: DocumentStore, data: IDODocument) {
     this.id = data.id;
     this.authorId = data.authorId;
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
     this.order = data.order;
     this.title = data.title ?? 'Untitled';
-    this.pages = data.pages.map((page) => new DOPage(page)) ?? [];
+
+    data.pages.map((page) => store.rootStore.pageStore.add(page));
+    this.pages = store.rootStore.pageStore.getPagesByDocumentId(data.id);
   }
 }

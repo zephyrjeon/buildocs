@@ -17,7 +17,7 @@ interface IState {
 }
 
 export class DocumentStore {
-  private rootStore: RootStore;
+  rootStore: RootStore;
 
   // Do not access Zustand state direclty, use useState, getState or setState methods to access state
   private state = create<IState>()(() => ({ myDocumentList: [] }));
@@ -88,7 +88,6 @@ export class DocumentStore {
     };
 
     const DODocument = this.instantiateDO(newDocument);
-
     this.setState(SET_STATE_ACTIONS.ADD, DODocument);
   }
 
@@ -106,14 +105,7 @@ export class DocumentStore {
   }
 
   addNewPage(documentId: string) {
-    const page = this.rootStore.pageStore.create(documentId);
-    const document = this.getMyDocumentById(documentId);
-    const newDocument = _.cloneDeep(document);
-    newDocument.pages = newDocument.pages.filter((p) => p.id != page.id);
-    newDocument.pages.push(page);
-    newDocument.pages.sort((a, b) => a.order - b.order);
-    const newDODocument = this.instantiateDO(newDocument);
-    this.setState(SET_STATE_ACTIONS.ADD, newDODocument);
+    return this.rootStore.pageStore.create(documentId);
   }
 
   removePage() {}
@@ -121,6 +113,6 @@ export class DocumentStore {
   update() {}
 
   instantiateDO(data: IDODocument) {
-    return Utils.deepFreeze(new DODocument(data));
+    return Utils.deepFreeze(new DODocument(this, data));
   }
 }

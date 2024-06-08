@@ -51,7 +51,7 @@ export const DocumentList = (props: DocumentListProps) => {
             isActive={params.documentId === document.id}
             isExpanded={expanded[document.id]}
           />
-          {expanded[document.id] && <PageList pages={document.pages} />}
+          {expanded[document.id] && <PageList documentId={document.id} />}
         </div>
       ))}
     </>

@@ -33,7 +33,8 @@ interface IState {
 }
 
 export class BEEditorStore {
-  private rootStore: RootStore;
+  rootStore: RootStore;
+
   private state = create<IState>()(() => ({
     focusedBE: null,
     hoveredBE: null,

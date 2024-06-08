@@ -1,17 +1,17 @@
-import { mockPages } from '@/utils/mockData';
+import { useStore } from '@/stores/RootStore';
+import { Utils } from '@/utils/Utils';
 import { useRouter } from 'next/navigation';
 import { PageItem } from './PageItem';
-import { DOPage } from '@/entities/page/DOPage';
-import { Utils } from '@/utils/Utils';
 
 interface IPageListProps {
-  pages: DOPage[];
+  documentId: string;
 }
 
 export const PageList = (props: IPageListProps) => {
-  const { pages } = props;
-
+  const { documentId } = props;
   const router = useRouter();
+  const store = useStore();
+  const pages = store.pageStore.usePagesByDocumentId(documentId);
 
   const onRedirect = (documentId: string, pageId: string) => {
     router.push(`${Utils.URLs.pagesURL(documentId, pageId)}`);

@@ -35,7 +35,7 @@ interface IState {
 }
 
 export class BEStore {
-  private rootStore: RootStore;
+  rootStore: RootStore;
 
   // Do not access Zustand state direclty, use useState, getState or setState methods to access state
   private state = create<IState>()(() => ({}));

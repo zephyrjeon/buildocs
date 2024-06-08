@@ -16,7 +16,7 @@ interface IState {
 }
 
 export class PageStore {
-  private rootStore: RootStore;
+  rootStore: RootStore;
 
   // Do not access Zustand state direclty, use useState, getState or setState methods to access state
   private state = create<IState>()(() => ({}));
@@ -60,6 +60,32 @@ export class PageStore {
     this.rootStore = rootStore;
   }
 
+  usePagesByDocumentId(documentId: string) {
+    return this.useState[documentId] ?? [];
+  }
+
+  getPagesByDocumentId(documentId: string) {
+    return this.getState[documentId] ?? [];
+  }
+
+  getPageById(pageId: string, documentId: string) {
+    const page = this.getPagesByDocumentId(documentId).find(
+      (page) => page.id === pageId
+    );
+    if (!page) throw new Error('Page is not found');
+    return page;
+  }
+
+  add(page: DOPage | IDOPage) {
+    if (page instanceof DOPage) {
+      this.setState(SET_STATE_ACTIONS.ADD, page);
+    } else {
+      this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(page));
+    }
+
+    return this.getPageById(page.id, page.documentId);
+  }
+
   create(documentId: string) {
     // TODO server api call
     const newPage: IDOPage = {
@@ -70,9 +96,7 @@ export class PageStore {
       documentId,
     };
 
-    const DOPage = this.instantiateDO(newPage);
-    this.setState(SET_STATE_ACTIONS.ADD, DOPage);
-    return DOPage;
+    return this.add(newPage);
   }
 
   // remove(page: DOPage) {
@@ -89,6 +113,6 @@ export class PageStore {
   // }
 
   instantiateDO(data: IDOPage) {
-    return Utils.deepFreeze(new DOPage(data));
+    return Utils.deepFreeze(new DOPage(this, data));
   }
 }

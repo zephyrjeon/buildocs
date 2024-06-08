@@ -1,3 +1,4 @@
+import { PageStore } from '@/stores/PageStore';
 import { IDOPage } from './PageInterfaces';
 
 export class DOPage implements IDOPage {
@@ -8,7 +9,7 @@ export class DOPage implements IDOPage {
   order: number;
   title: string;
 
-  constructor(data: IDOPage) {
+  constructor(store: PageStore, data: IDOPage) {
     this.id = data.id;
     this.documentId = data.documentId;
     this.createdAt = data.createdAt;
