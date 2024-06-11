@@ -7,4 +7,5 @@ export interface IDOPage {
   order: number;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt?: Date;
 }

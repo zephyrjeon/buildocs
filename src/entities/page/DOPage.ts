@@ -6,6 +6,7 @@ export class DOPage implements IDOPage {
   documentId: string;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt?: Date;
   order: number;
   title: string;
 
@@ -14,6 +15,7 @@ export class DOPage implements IDOPage {
     this.documentId = data.documentId;
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
+    this.deletedAt = data.deletedAt;
     this.order = data.order;
     this.title = data.title ?? 'Untitled';
   }

@@ -92,7 +92,7 @@ export class DocumentStore {
   }
 
   remove(document: DODocument) {
-    // TODO move document and pages to archive
+    // TODO move pages to deleted pages and permernantly delete document
     // TODO server api call
     this.setState(SET_STATE_ACTIONS.REMOVE, document);
   }
