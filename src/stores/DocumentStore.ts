@@ -6,6 +6,7 @@ import _ from 'lodash';
 import ShortUniqueId from 'short-unique-id';
 import { create } from 'zustand';
 import { RootStore } from './RootStore';
+import { DOPage } from '@/entities/page/DOPage';
 
 enum SET_STATE_ACTIONS {
   ADD = 'ADD',
@@ -94,6 +95,7 @@ export class DocumentStore {
   remove(document: DODocument) {
     // TODO move pages to deleted pages and permernantly delete document
     // TODO server api call
+    this.rootStore.pageStore.removeAll(document.pages);
     this.setState(SET_STATE_ACTIONS.REMOVE, document);
   }
 
@@ -108,7 +110,9 @@ export class DocumentStore {
     return this.rootStore.pageStore.create(documentId);
   }
 
-  removePage() {}
+  removePage(page: DOPage) {
+    return this.rootStore.pageStore.remove(page);
+  }
 
   update() {}
 

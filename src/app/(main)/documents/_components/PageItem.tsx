@@ -13,12 +13,12 @@ import { useParams } from 'next/navigation';
 
 interface IPageItemProps {
   onClick: () => void;
-  onArchive: () => void;
+  onRemove: () => void;
   page: any;
 }
 
 export const PageItem = (props: IPageItemProps) => {
-  const { onClick, onArchive, page } = props;
+  const { onClick, onRemove, page } = props;
   const param = useParams();
 
   return (
@@ -48,7 +48,7 @@ export const PageItem = (props: IPageItemProps) => {
             side="right"
             forceMount
           >
-            <DropdownMenuItem onClick={onArchive}>
+            <DropdownMenuItem onClick={onRemove}>
               <Trash className="h-4 w-4 mr-2" />
               Delete
             </DropdownMenuItem>

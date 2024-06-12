@@ -8,7 +8,6 @@ import { RootStore } from './RootStore';
 enum SET_STATE_ACTIONS {
   ADD = 'ADD',
   REMOVE = 'REMOVE',
-  REMOVE_DOCUMENT = 'REMOVE_DOCUMENT',
 }
 
 interface IState {
@@ -99,12 +98,15 @@ export class PageStore {
     return this.add(newPage);
   }
 
-  // remove(page: DOPage) {
-  //   // TODO move page to archive
-  //   // TODO server api call
-  //   this.setState(SET_STATE_ACTIONS.REMOVE, page);
-  //   // remove new page from document.pages
-  // }
+  remove(page: DOPage) {
+    // TODO move page to trash
+    // TODO server api call
+    this.setState(SET_STATE_ACTIONS.REMOVE, page);
+  }
+
+  removeAll(pages: DOPage[]) {
+    pages.forEach((page) => this.setState(SET_STATE_ACTIONS.REMOVE, page));
+  }
 
   // rename(page: DOPage, newTitle: string) {
   //   const newPage = _.cloneDeep(page);

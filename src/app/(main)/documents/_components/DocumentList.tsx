@@ -26,7 +26,11 @@ export const DocumentList = (props: DocumentListProps) => {
   };
 
   const handleRedirect = (document: DODocument) => {
-    router.push(`${Utils.URLs.pagesURL(document.id, document.pages[0].id)}`);
+    const pages = store.pageStore.getPagesByDocumentId(document.id);
+
+    if (pages.length > 0) {
+      router.push(`${Utils.URLs.pagesURL(document.id, pages[0].id)}`);
+    }
   };
 
   // TODO: loading state

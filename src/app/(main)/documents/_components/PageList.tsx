@@ -31,7 +31,7 @@ export const PageList = (props: IPageListProps) => {
         >
           <PageItem
             onClick={() => onRedirect(page.documentId, page.id)}
-            onArchive={() => {}}
+            onRemove={() => store.documentStore.removePage(page)}
             page={page}
           />
         </div>
