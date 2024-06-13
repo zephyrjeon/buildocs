@@ -4,6 +4,7 @@ import { Utils } from '@/utils/Utils';
 import ShortUniqueId from 'short-unique-id';
 import { create } from 'zustand';
 import { RootStore } from './RootStore';
+import _ from 'lodash';
 
 enum SET_STATE_ACTIONS {
   ADD = 'ADD',
@@ -108,11 +109,11 @@ export class PageStore {
     pages.forEach((page) => this.setState(SET_STATE_ACTIONS.REMOVE, page));
   }
 
-  // rename(page: DOPage, newTitle: string) {
-  //   const newPage = _.cloneDeep(page);
-  //   newPage.title = newTitle;
-  //   this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(newPage));
-  // }
+  rename(page: DOPage, newTitle: string) {
+    const newPage = _.cloneDeep(page);
+    newPage.title = newTitle;
+    this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(newPage));
+  }
 
   instantiateDO(data: IDOPage) {
     return Utils.deepFreeze(new DOPage(this, data));
