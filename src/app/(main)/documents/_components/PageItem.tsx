@@ -11,7 +11,14 @@ import {
 import { DOPage } from '@/entities/page/DOPage';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/stores/RootStore';
-import { FileText, MoreHorizontal, Trash, SquarePen } from 'lucide-react';
+import {
+  FileText,
+  MoreHorizontal,
+  Trash,
+  SquarePen,
+  ChevronUp,
+  ChevronDown,
+} from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import React from 'react';
@@ -44,7 +51,7 @@ export const PageItem = (props: IPageItemProps) => {
       )}
     >
       <FileText className="shrink-0 h-[18px] w-[18px] mr-2 text-muted-foreground" />
-      <span className="truncate">{page.title}</span>
+      <span className="truncate">{page.order + page.title}</span>
       <DropdownMenu open={isRenaming} onOpenChange={() => setIsRenaming(false)}>
         <DropdownMenuTrigger></DropdownMenuTrigger>
         <DropdownMenuContent className="w-60" align="start">
@@ -87,6 +94,18 @@ export const PageItem = (props: IPageItemProps) => {
             >
               <Trash className="h-4 w-4 mr-2" />
               Delete
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => store.pageStore.reorder(page, page.order - 1)}
+            >
+              <ChevronUp className="h-4 w-4 mr-2" />
+              Move Up
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => store.pageStore.reorder(page, page.order + 1)}
+            >
+              <ChevronDown className="h-4 w-4 mr-2" />
+              Move Down
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />

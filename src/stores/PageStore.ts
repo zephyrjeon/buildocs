@@ -61,11 +61,15 @@ export class PageStore {
   }
 
   usePagesByDocumentId(documentId: string) {
-    return this.useState[documentId] ?? [];
+    return this.useState[documentId]
+      ? [...this.useState[documentId]].sort((a, b) => a.order - b.order)
+      : [];
   }
 
   getPagesByDocumentId(documentId: string) {
-    return this.getState[documentId] ?? [];
+    return this.getState[documentId]
+      ? [...this.getState[documentId]].sort((a, b) => a.order - b.order)
+      : [];
   }
 
   getPageById(pageId: string, documentId: string) {
@@ -103,6 +107,11 @@ export class PageStore {
     // TODO move page to trash
     // TODO server api call
     this.setState(SET_STATE_ACTIONS.REMOVE, page);
+    const pages = this.getPagesByDocumentId(page.documentId);
+
+    if (pages.length > 0) {
+      this.reorder(pages[0], 0);
+    }
   }
 
   removeAll(pages: DOPage[]) {
@@ -113,6 +122,21 @@ export class PageStore {
     const newPage = _.cloneDeep(page);
     newPage.title = newTitle;
     this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(newPage));
+  }
+
+  reorder(page: DOPage, newOrder: number) {
+    const pages = this.getPagesByDocumentId(page.documentId);
+    const filtered = pages.filter((p) => p.id !== page.id);
+    newOrder = Math.max(Math.min(pages.length, newOrder), 0);
+    filtered.splice(newOrder, 0, page);
+
+    filtered.forEach((p, index) => {
+      if (p.order != index) {
+        const cloned = _.cloneDeep(p);
+        cloned.order = index;
+        this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(cloned));
+      }
+    });
   }
 
   instantiateDO(data: IDOPage) {
