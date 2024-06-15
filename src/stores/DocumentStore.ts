@@ -63,6 +63,10 @@ export class DocumentStore {
     return this.useState.myDocumentList;
   }
 
+  get getMyDocumentList() {
+    return this.getState.myDocumentList;
+  }
+
   getMyDocumentById(documentId: string) {
     const document = this.getState.myDocumentList.find(
       (doc) => doc.id === documentId
@@ -97,6 +101,10 @@ export class DocumentStore {
     // TODO server api call
     this.rootStore.pageStore.removeAll(document.pages);
     this.setState(SET_STATE_ACTIONS.REMOVE, document);
+
+    if (this.getMyDocumentList.length > 0) {
+      this.reorder(this.getMyDocumentList[0], 0);
+    }
   }
 
   rename(document: DODocument, newTitle: string) {
@@ -104,6 +112,21 @@ export class DocumentStore {
     newDocument.title = newTitle;
     const newDODocument = this.instantiateDO(newDocument);
     this.setState(SET_STATE_ACTIONS.ADD, newDODocument);
+  }
+
+  reorder(document: DODocument, newOrder: number) {
+    const documents = this.getMyDocumentList;
+    const filtered = documents.filter((doc) => doc.id !== document.id);
+    newOrder = Math.max(Math.min(documents.length, newOrder), 0);
+    filtered.splice(newOrder, 0, document);
+
+    filtered.forEach((doc, index) => {
+      if (doc.order != index) {
+        const cloned = _.cloneDeep(doc);
+        cloned.order = index;
+        this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(cloned));
+      }
+    });
   }
 
   addNewPage(documentId: string) {

@@ -17,6 +17,7 @@ import {
   Book,
   ChevronDown,
   ChevronRight,
+  ChevronUp,
   MoreHorizontal,
   Plus,
   SquarePen,
@@ -45,11 +46,11 @@ export const DocumentItem = (props: IDocumenttemProps) => {
     store.documentStore.rename(document, newTitle);
   };
 
-  const handleArchive = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleDelete = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     if (!document.id) return;
     store.documentStore.remove(document);
-    toast.message('Document Archived');
+    toast.message('Document Deleted');
   };
 
   const handleExpand = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -83,7 +84,7 @@ export const DocumentItem = (props: IDocumenttemProps) => {
         <ChevronIcon className="h-4 w-4 shrink-0 text-muted-foreground/50" />
       </div>
       <Book className="shrink-0 h-[18px] w-[18px] mr-2 text-muted-foreground" />
-      <span className="truncate">{document.title}</span>
+      <span className="truncate">{document.order + document.title}</span>
       <DropdownMenu open={isRenaming} onOpenChange={() => setIsRenaming(false)}>
         <DropdownMenuTrigger></DropdownMenuTrigger>
         <DropdownMenuContent className="w-60" align="start">
@@ -121,10 +122,27 @@ export const DocumentItem = (props: IDocumenttemProps) => {
               <SquarePen className="h-4 w-4 mr-2" />
               Rename
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleArchive}>
+            <DropdownMenuItem
+              onClick={() =>
+                store.documentStore.reorder(document, document.order - 1)
+              }
+            >
+              <ChevronUp className="h-4 w-4 mr-2" />
+              Move Up
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                store.documentStore.reorder(document, document.order + 1)
+              }
+            >
+              <ChevronDown className="h-4 w-4 mr-2" />
+              Move Down
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDelete}>
               <Trash className="h-4 w-4 mr-2" />
               Delete
             </DropdownMenuItem>
+
             <DropdownMenuSeparator />
             <div className="text-xs text-muted-foreground p-2">
               Last edited by: {user?.fullName}

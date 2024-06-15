@@ -90,12 +90,6 @@ export const PageItem = (props: IPageItemProps) => {
               Rename
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => store.documentStore.removePage(page)}
-            >
-              <Trash className="h-4 w-4 mr-2" />
-              Delete
-            </DropdownMenuItem>
-            <DropdownMenuItem
               onClick={() => store.pageStore.reorder(page, page.order - 1)}
             >
               <ChevronUp className="h-4 w-4 mr-2" />
@@ -107,7 +101,12 @@ export const PageItem = (props: IPageItemProps) => {
               <ChevronDown className="h-4 w-4 mr-2" />
               Move Down
             </DropdownMenuItem>
-
+            <DropdownMenuItem
+              onClick={() => store.documentStore.removePage(page)}
+            >
+              <Trash className="h-4 w-4 mr-2" />
+              Delete
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <div className="text-xs text-muted-foreground p-2">
               Last edited by: TODO
