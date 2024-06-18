@@ -190,7 +190,7 @@ export const Navigation = () => {
       <div
         ref={topbarRef}
         className={cn(
-          `absolute top-0 z-[99999] left-[${MIN_NAV_WIDTH}px] w-[calc(100%-${MIN_NAV_WIDTH}px)]`,
+          `absolute top-0 z-[99999]  dark:bg-[#1F1F1F] left-[${MIN_NAV_WIDTH}px] w-[calc(100%-${MIN_NAV_WIDTH}px)]`,
           isResetting && 'transition-all ease-in-out duration-300',
           isMobile && 'left-0 w-full'
         )}

@@ -84,7 +84,7 @@ export const DocumentItem = (props: IDocumenttemProps) => {
         <ChevronIcon className="h-4 w-4 shrink-0 text-muted-foreground/50" />
       </div>
       <Book className="shrink-0 h-[18px] w-[18px] mr-2 text-muted-foreground" />
-      <span className="truncate">{document.order + document.title}</span>
+      <span className="truncate">{document.title}</span>
       <DropdownMenu open={isRenaming} onOpenChange={() => setIsRenaming(false)}>
         <DropdownMenuTrigger></DropdownMenuTrigger>
         <DropdownMenuContent className="w-60" align="start">

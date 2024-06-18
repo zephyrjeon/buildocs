@@ -102,7 +102,7 @@ const DocumentIdPage = ({}: DocumentIdPageProps) => {
   const beIds = rootBE?.contents?.childrenIds ?? [];
 
   return (
-    <div className="pb-40 ">
+    <div className="pb-40 pt-[50px]">
       {/* <Cover url={document.coverImage} /> */}
       <div
         className="md:max-w-3xl lg:max-w-4xl mx-auto"
@@ -110,7 +110,7 @@ const DocumentIdPage = ({}: DocumentIdPageProps) => {
         //   store.BEEditStore.setHoveredBE(null);
         // }}
       >
-        <Toolbar initialData={document} />
+        {/* <Toolbar initialData={document} /> */}
         <BERenderer beIds={beIds} isRootLevel />
       </div>
     </div>
