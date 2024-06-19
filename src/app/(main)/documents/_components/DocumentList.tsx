@@ -2,7 +2,6 @@
 
 import { DODocument } from '@/entities/document/DODocument';
 import { useStore } from '@/stores/RootStore';
-import { Utils } from '@/utils/Utils';
 import { useParams, useRouter } from 'next/navigation';
 import React from 'react';
 import { DocumentItem } from './DocumentItem';
@@ -29,7 +28,7 @@ export const DocumentList = (props: DocumentListProps) => {
     const pages = store.pageStore.getPagesByDocumentId(document.id);
 
     if (pages.length > 0) {
-      router.push(`${Utils.URLs.pagesURL(document.id, pages[0].id)}`);
+      router.push(`${store.urls.pages(document.id, pages[0].id)}`);
     }
   };
 

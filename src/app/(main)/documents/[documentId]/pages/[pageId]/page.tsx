@@ -102,19 +102,26 @@ const DocumentIdPage = ({}: DocumentIdPageProps) => {
   const beIds = rootBE?.contents?.childrenIds ?? [];
 
   return (
-    <div className="pb-40 pt-[50px]">
+    <div className="pt-[50px] h-full">
       {/* <Cover url={document.coverImage} /> */}
-      <div
-        className="md:max-w-3xl lg:max-w-4xl mx-auto"
-        // onMouseLeave={() => {
-        //   store.BEEditStore.setHoveredBE(null);
-        // }}
-      >
-        {/* <Toolbar initialData={document} /> */}
+      {/* <Toolbar initialData={document} /> */}
+      <Editor>
         <BERenderer beIds={beIds} isRootLevel />
-      </div>
+      </Editor>
     </div>
   );
 };
 
 export default DocumentIdPage;
+
+interface IEditorProps {
+  children: React.ReactNode;
+}
+
+const Editor = (props: IEditorProps) => {
+  return (
+    <div className="p-10 pb-40 min-h-full flex-1">
+      <div className="md:max-w-3xl lg:max-w-5xl mx-auto">{props.children}</div>
+    </div>
+  );
+};

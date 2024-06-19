@@ -1,10 +1,10 @@
+import _ from 'lodash';
+import ShortUniqueId from 'short-unique-id';
+
 export const Utils = {
-  URLs: {
-    rootURL: '/',
-    documentsURL: '/documents',
-    pagesURL: (documentId: string, pageId: string) =>
-      `${Utils.URLs.documentsURL}/${documentId}/pages/${pageId}`,
-  },
+  _: _,
+
+  createUniqueId: (length: number) => new ShortUniqueId({ length }).rnd(),
 
   deepFreeze: <T extends { [key: string]: any }>(obj: T): T => {
     if (obj && typeof obj === 'object') {

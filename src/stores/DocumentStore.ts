@@ -1,9 +1,6 @@
 import { DODocument } from '@/entities/document/DODocument';
 import { IDODocument } from '@/entities/document/DocumentInterfaces';
-import { Utils } from '@/utils/Utils';
 import { mockMyDocuments } from '@/utils/mockData';
-import _ from 'lodash';
-import ShortUniqueId from 'short-unique-id';
 import { create } from 'zustand';
 import { RootStore } from './RootStore';
 import { DOPage } from '@/entities/page/DOPage';
@@ -84,7 +81,9 @@ export class DocumentStore {
   create() {
     // TODO server api call
     const newDocument: IDODocument = {
-      id: new ShortUniqueId({ length: 10 }).rnd(),
+      id: this.rootStore.di.utils.createUniqueId(
+        this.rootStore.options.SHORT_UNIQUE_ID_LENGTH
+      ),
       authorId: 'userId',
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -108,7 +107,7 @@ export class DocumentStore {
   }
 
   rename(document: DODocument, newTitle: string) {
-    const newDocument = _.cloneDeep(document);
+    const newDocument = this.rootStore.di.utils._.cloneDeep(document);
     newDocument.title = newTitle;
     const newDODocument = this.instantiateDO(newDocument);
     this.setState(SET_STATE_ACTIONS.ADD, newDODocument);
@@ -122,7 +121,7 @@ export class DocumentStore {
 
     filtered.forEach((doc, index) => {
       if (doc.order != index) {
-        const cloned = _.cloneDeep(doc);
+        const cloned = this.rootStore.di.utils._.cloneDeep(doc);
         cloned.order = index;
         this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(cloned));
       }
@@ -140,6 +139,6 @@ export class DocumentStore {
   update() {}
 
   instantiateDO(data: IDODocument) {
-    return Utils.deepFreeze(new DODocument(this, data));
+    return this.rootStore.di.utils.deepFreeze(new DODocument(this, data));
   }
 }

@@ -1,10 +1,7 @@
 import { DOPage } from '@/entities/page/DOPage';
 import { IDOPage } from '@/entities/page/PageInterfaces';
-import { Utils } from '@/utils/Utils';
-import ShortUniqueId from 'short-unique-id';
 import { create } from 'zustand';
 import { RootStore } from './RootStore';
-import _ from 'lodash';
 
 enum SET_STATE_ACTIONS {
   ADD = 'ADD',
@@ -93,7 +90,9 @@ export class PageStore {
   create(documentId: string) {
     // TODO server api call
     const newPage: IDOPage = {
-      id: new ShortUniqueId({ length: 10 }).rnd(),
+      id: this.rootStore.di.utils.createUniqueId(
+        this.rootStore.options.SHORT_UNIQUE_ID_LENGTH
+      ),
       createdAt: new Date(),
       updatedAt: new Date(),
       order: this.getState[documentId]?.length ?? 0,
@@ -119,7 +118,7 @@ export class PageStore {
   }
 
   rename(page: DOPage, newTitle: string) {
-    const newPage = _.cloneDeep(page);
+    const newPage = this.rootStore.di.utils._.cloneDeep(page);
     newPage.title = newTitle;
     this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(newPage));
   }
@@ -132,7 +131,7 @@ export class PageStore {
 
     filtered.forEach((p, index) => {
       if (p.order != index) {
-        const cloned = _.cloneDeep(p);
+        const cloned = this.rootStore.di.utils._.cloneDeep(p);
         cloned.order = index;
         this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(cloned));
       }
@@ -140,6 +139,6 @@ export class PageStore {
   }
 
   instantiateDO(data: IDOPage) {
-    return Utils.deepFreeze(new DOPage(this, data));
+    return this.rootStore.di.utils.deepFreeze(new DOPage(this, data));
   }
 }

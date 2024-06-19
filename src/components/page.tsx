@@ -1,15 +1,16 @@
+import { useStore } from '@/stores/RootStore';
 import Link from 'next/link';
-import React from 'react';
-import { Utils } from '../utils/Utils';
 import { Button } from './ui/button';
 
 interface IPageProps {}
 
 export default function Page(props: IPageProps) {
+  const store = useStore();
+
   return (
     <div>
       <div>Buildocs Home</div>
-      <Link href={`${Utils.URLs.documentsURL}/temp/pages/temp`}>
+      <Link href={`${store.urls.documents}/temp/pages/temp`}>
         Create your first document
       </Link>
       <Button />

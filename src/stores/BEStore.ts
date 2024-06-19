@@ -1,4 +1,3 @@
-import { APP_ENUMS } from '@/common/enums';
 import {
   DO_BE,
   IDOBaseBE,
@@ -14,7 +13,6 @@ import { DOContainerBE } from '@/entities/blockElement/DOContainerBE';
 import { DOHeadingBE } from '@/entities/blockElement/DOHeadingBE';
 import { DORootBE } from '@/entities/blockElement/DORootBE';
 import { DOTextBE } from '@/entities/blockElement/DOTextBE';
-import { Utils } from '@/utils/Utils';
 import { create } from 'zustand';
 import { RootStore } from './RootStore';
 
@@ -128,20 +126,30 @@ export class BEStore {
 
   instantiateDO(BE: IDOBaseBE) {
     switch (BE.tag) {
-      case APP_ENUMS.BE_TAGS.ROOT:
-        return Utils.deepFreeze(new DORootBE(BE as IDORootBE));
-      case APP_ENUMS.BE_TAGS.HEADING:
-        return Utils.deepFreeze(new DOHeadingBE(BE as IDOHeadingBE));
-      case APP_ENUMS.BE_TAGS.TEXT:
-        return Utils.deepFreeze(new DOTextBE(BE as IDOTextBE));
-      // case APP_ENUMS.BE_TAGS.BULLETED_LIST:
-      // case APP_ENUMS.BE_TAGS.NUMBERED_LIST:
-      // case APP_ENUMS.BE_TAGS.IMAGE:
-      // case APP_ENUMS.BE_TAGS.LINK:
-      case APP_ENUMS.BE_TAGS.CONTAINER_ROW:
-        return Utils.deepFreeze(new DOContainerBE(BE as IDOContainerBE));
-      case APP_ENUMS.BE_TAGS.CONTAINER_COLUMN:
-        return Utils.deepFreeze(new DOContainerBE(BE as IDOContainerBE));
+      case this.rootStore.di.enums.BE_TAGS.ROOT:
+        return this.rootStore.di.utils.deepFreeze(
+          new DORootBE(BE as IDORootBE)
+        );
+      case this.rootStore.di.enums.BE_TAGS.HEADING:
+        return this.rootStore.di.utils.deepFreeze(
+          new DOHeadingBE(BE as IDOHeadingBE)
+        );
+      case this.rootStore.di.enums.BE_TAGS.TEXT:
+        return this.rootStore.di.utils.deepFreeze(
+          new DOTextBE(BE as IDOTextBE)
+        );
+      // case this.rootStore.di.enums.BE_TAGS.BULLETED_LIST:
+      // case this.rootStore.di.enums.BE_TAGS.NUMBERED_LIST:
+      // case this.rootStore.di.enums.BE_TAGS.IMAGE:
+      // case this.rootStore.di.enums.BE_TAGS.LINK:
+      case this.rootStore.di.enums.BE_TAGS.CONTAINER_ROW:
+        return this.rootStore.di.utils.deepFreeze(
+          new DOContainerBE(BE as IDOContainerBE)
+        );
+      case this.rootStore.di.enums.BE_TAGS.CONTAINER_COLUMN:
+        return this.rootStore.di.utils.deepFreeze(
+          new DOContainerBE(BE as IDOContainerBE)
+        );
       default:
         throw new Error('Unregistered BE tag');
     }

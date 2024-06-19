@@ -1,10 +1,9 @@
 'use client';
 
-import React from 'react';
-import { redirect } from 'next/navigation';
-import { Utils } from '../../utils/Utils';
-import { Navigation } from './documents/_components/Navigation';
 import { useStore } from '@/stores/RootStore';
+import { redirect } from 'next/navigation';
+import React from 'react';
+import { Navigation } from './documents/_components/Navigation';
 
 interface IMainLayoutProps {
   children: React.ReactNode;
@@ -31,7 +30,7 @@ const MainLayout = (props: IMainLayoutProps) => {
   }
 
   if (!isAuthenticated) {
-    return redirect(Utils.URLs.rootURL);
+    return redirect(store.urls.root);
   }
 
   return (

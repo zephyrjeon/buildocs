@@ -1,5 +1,4 @@
 import { useStore } from '@/stores/RootStore';
-import { Utils } from '@/utils/Utils';
 import { useRouter } from 'next/navigation';
 import { PageItem } from './PageItem';
 
@@ -14,7 +13,7 @@ export const PageList = (props: IPageListProps) => {
   const pages = store.pageStore.usePagesByDocumentId(documentId);
 
   const onRedirect = (documentId: string, pageId: string) => {
-    router.push(`${Utils.URLs.pagesURL(documentId, pageId)}`);
+    router.push(`${store.urls.pages(documentId, pageId)}`);
   };
 
   return (

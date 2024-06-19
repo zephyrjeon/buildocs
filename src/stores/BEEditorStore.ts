@@ -1,4 +1,3 @@
-import { APP_ENUMS } from '@/common/enums';
 import {
   BE_CONTENTS,
   BE_TAGS,
@@ -8,11 +7,9 @@ import {
   IRecursiveBEContents,
 } from '@/entities/blockElement/BEInterfaces';
 import { produce } from 'immer';
-import _ from 'lodash';
-import ShortUniqueId from 'short-unique-id';
 import { create } from 'zustand';
-import { RootStore } from './RootStore';
 import { BE_RELATIONS } from './BEStore';
+import { RootStore } from './RootStore';
 
 export enum BE_DROP_POSITION {
   TOP = 'TOP',
@@ -118,14 +115,17 @@ export class BEEditorStore {
     const parentBE = this.rootStore.BEStore.getBEById(
       BE.parentId
     ) as IDORecursiveBE<IRecursiveBEContents>;
-    const clonedParentBE = _.cloneDeep(parentBE);
+    const clonedParentBE = this.rootStore.di.utils._.cloneDeep(parentBE);
     clonedParentBE.contents.childrenIds.push(BE.id);
     this.rootStore.BEStore.setBE(clonedParentBE);
     return BE;
   }
 
   updateBE(targetBE: DO_BE, data: Partial<Omit<DO_BE, 'id'>>) {
-    const newBEdata = { ..._.cloneDeep(targetBE), ...data };
+    const newBEdata = {
+      ...this.rootStore.di.utils._.cloneDeep(targetBE),
+      ...data,
+    };
     const newBE = this.formIntoBE(newBEdata);
     const validatedBE = this.validateBE(newBE);
     return this.rootStore.BEStore.setBE(validatedBE);
@@ -140,7 +140,7 @@ export class BEEditorStore {
       BE.parentId
     ) as IDORecursiveBE<IRecursiveBEContents>;
 
-    const clonedParentBE = _.cloneDeep(parentBE);
+    const clonedParentBE = this.rootStore.di.utils._.cloneDeep(parentBE);
 
     clonedParentBE.contents.childrenIds =
       clonedParentBE.contents.childrenIds.filter((id) => BE.id !== id);
@@ -250,7 +250,7 @@ export class BEEditorStore {
     const baseBEProps: IDOBaseBE = {
       id: '',
       parentId: '',
-      tag: APP_ENUMS.BE_TAGS.TEXT,
+      tag: this.rootStore.di.enums.BE_TAGS.TEXT,
       contents: {},
     };
 
@@ -292,21 +292,23 @@ export class BEEditorStore {
   }
 
   private getContentsPropertiesByTag(tag: BE_TAGS): BE_CONTENTS {
-    return tag === APP_ENUMS.BE_TAGS.HEADING
+    return tag === this.rootStore.di.enums.BE_TAGS.HEADING
       ? { innerText: '' }
-      : tag === APP_ENUMS.BE_TAGS.TEXT
+      : tag === this.rootStore.di.enums.BE_TAGS.TEXT
       ? { innerText: '' }
       : { childrenIds: [] };
   }
 
   // Trasform BE data into DO_BE instance in a corresponding form by its tag
   private formIntoBE(BE: Partial<IDOBaseBE>): DO_BE {
-    BE = _.cloneDeep(BE);
+    BE = this.rootStore.di.utils._.cloneDeep(BE);
 
     // Set all the possible properties with the default value then overide with BE provided
     const newBE = {
-      id: new ShortUniqueId({ length: 10 }).rnd(),
-      tag: APP_ENUMS.BE_TAGS.TEXT,
+      id: this.rootStore.di.utils.createUniqueId(
+        this.rootStore.options.SHORT_UNIQUE_ID_LENGTH
+      ),
+      tag: this.rootStore.di.enums.BE_TAGS.TEXT,
       parentId: this.rootStore.BEStore.getRootBE.id,
       ...BE,
       contents: {

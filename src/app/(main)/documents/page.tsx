@@ -1,15 +1,16 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { useStore } from '@/stores/RootStore';
 import { PlusCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Utils } from '../../../utils/Utils';
-import empty from '../../../../public/empty.png';
 import emptyDark from '../../../../public/empty-dark.png';
+import empty from '../../../../public/empty.png';
 
 const DocumentsPage = () => {
+  const store = useStore();
   const router = useRouter();
   const user = {
     firstName: 'Tester',
@@ -19,7 +20,7 @@ const DocumentsPage = () => {
     // const promise = create({ title: "Untitled" })
     //   .then((documentId) => router.push(`/documents/${documentId}`))
 
-    router.push(Utils.URLs.pagesURL('temp1', 'temp2'));
+    router.push(store.urls.pages('temp1', 'temp2'));
 
     //   toast.promise(promise, {
     //   loading: 'Creating a new note...',
