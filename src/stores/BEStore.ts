@@ -129,31 +129,31 @@ export class BEStore {
 
   instantiateDO(BE: IDOBaseBE) {
     switch (BE.tag) {
-      case this.rootStore.di.enums.BE_TAGS.ROOT:
+      case this.rootStore.enums.BE_TAGS.ROOT:
         return this.rootStore.di.utils.deepFreeze(
           new DORootBE(BE as IDORootBE)
         );
-      case this.rootStore.di.enums.BE_TAGS.HEADING:
+      case this.rootStore.enums.BE_TAGS.HEADING:
         return this.rootStore.di.utils.deepFreeze(
           new DOHeadingBE(BE as IDOHeadingBE)
         );
-      case this.rootStore.di.enums.BE_TAGS.TEXT:
+      case this.rootStore.enums.BE_TAGS.TEXT:
         return this.rootStore.di.utils.deepFreeze(
           new DOTextBE(BE as IDOTextBE)
         );
 
-      case this.rootStore.di.enums.BE_TAGS.CONTAINER_ROW:
+      case this.rootStore.enums.BE_TAGS.CONTAINER_ROW:
         return this.rootStore.di.utils.deepFreeze(
           new DOContainerBE(BE as IDOContainerBE)
         );
-      case this.rootStore.di.enums.BE_TAGS.CONTAINER_COLUMN:
+      case this.rootStore.enums.BE_TAGS.CONTAINER_COLUMN:
         return this.rootStore.di.utils.deepFreeze(
           new DOContainerBE(BE as IDOContainerBE)
         );
-      case this.rootStore.di.enums.BE_TAGS.TOGGLE_HEADING_LIST:
-      case this.rootStore.di.enums.BE_TAGS.TOGGLE_LIST:
-      case this.rootStore.di.enums.BE_TAGS.BULLETED_LIST:
-      case this.rootStore.di.enums.BE_TAGS.NUMBERED_LIST:
+      case this.rootStore.enums.BE_TAGS.TOGGLE_HEADING_LIST:
+      case this.rootStore.enums.BE_TAGS.TOGGLE_LIST:
+      case this.rootStore.enums.BE_TAGS.BULLETED_LIST:
+      case this.rootStore.enums.BE_TAGS.NUMBERED_LIST:
         return this.rootStore.di.utils.deepFreeze(
           new DOListableBE(BE as IDOListableBE)
         );
@@ -198,6 +198,14 @@ export class BEStore {
   BETypeGuards = {
     isRecursive: (BE: DO_BE): BE is IDORecursiveBE<IRecursiveBEContents> => {
       return BE.contents.hasOwnProperty('childrenIds');
+    },
+    isListable: (BE: DO_BE): BE is IDOListableBE => {
+      return (
+        BE.tag === this.rootStore.enums.BE_TAGS.TOGGLE_HEADING_LIST ||
+        BE.tag === this.rootStore.enums.BE_TAGS.TOGGLE_LIST ||
+        BE.tag === this.rootStore.enums.BE_TAGS.NUMBERED_LIST ||
+        BE.tag === this.rootStore.enums.BE_TAGS.BULLETED_LIST
+      );
     },
     narrowToRecursive: (
       BE: DO_BE

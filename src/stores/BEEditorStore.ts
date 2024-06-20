@@ -249,7 +249,7 @@ export class BEEditorStore {
     const baseBEProps: IDOBaseBE = {
       id: '',
       parentId: '',
-      tag: this.rootStore.di.enums.BE_TAGS.TEXT,
+      tag: this.rootStore.enums.BE_TAGS.TEXT,
       contents: {},
     };
 
@@ -292,20 +292,20 @@ export class BEEditorStore {
 
   private getContentsPropertiesByTag(tag: BE_TAGS): BE_CONTENTS {
     switch (tag) {
-      case this.rootStore.di.enums.BE_TAGS.ROOT:
+      case this.rootStore.enums.BE_TAGS.ROOT:
         return { childrenIds: [] };
-      case this.rootStore.di.enums.BE_TAGS.HEADING:
+      case this.rootStore.enums.BE_TAGS.HEADING:
         return { innerText: '' };
-      case this.rootStore.di.enums.BE_TAGS.TEXT:
+      case this.rootStore.enums.BE_TAGS.TEXT:
         return { innerText: '' };
-      case this.rootStore.di.enums.BE_TAGS.CONTAINER_ROW:
+      case this.rootStore.enums.BE_TAGS.CONTAINER_ROW:
         return { childrenIds: [] };
-      case this.rootStore.di.enums.BE_TAGS.CONTAINER_COLUMN:
+      case this.rootStore.enums.BE_TAGS.CONTAINER_COLUMN:
         return { childrenIds: [] };
-      case this.rootStore.di.enums.BE_TAGS.TOGGLE_HEADING_LIST:
-      case this.rootStore.di.enums.BE_TAGS.TOGGLE_LIST:
-      case this.rootStore.di.enums.BE_TAGS.BULLETED_LIST:
-      case this.rootStore.di.enums.BE_TAGS.NUMBERED_LIST:
+      case this.rootStore.enums.BE_TAGS.TOGGLE_HEADING_LIST:
+      case this.rootStore.enums.BE_TAGS.TOGGLE_LIST:
+      case this.rootStore.enums.BE_TAGS.BULLETED_LIST:
+      case this.rootStore.enums.BE_TAGS.NUMBERED_LIST:
         return { innerText: '', childrenIds: [] };
 
       default:
@@ -322,7 +322,7 @@ export class BEEditorStore {
       id: this.rootStore.di.utils.createUniqueId(
         this.rootStore.options.SHORT_UNIQUE_ID_LENGTH
       ),
-      tag: this.rootStore.di.enums.BE_TAGS.TEXT,
+      tag: this.rootStore.enums.BE_TAGS.TEXT,
       parentId: this.rootStore.BEStore.getRootBE.id,
       ...BE,
       contents: {

@@ -24,6 +24,10 @@ export class RootStore {
     return this.di.urls;
   }
 
+  get enums() {
+    return this.di.enums;
+  }
+
   log(msg: string) {
     console.log(`RootStore msg: ${msg}`);
   }

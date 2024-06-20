@@ -47,7 +47,7 @@ export const BEInput = (props: IBEInputProps) => {
           data-placeholder="Click me and start typing!"
           onInput={(e) => setText(e.currentTarget.innerText)}
         >
-          {text}
+          {/* {text} */}
         </div>
         <Button variant="outline" onClick={handleAddBE}>
           Add

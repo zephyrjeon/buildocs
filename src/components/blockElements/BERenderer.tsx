@@ -4,7 +4,7 @@ import { DOContainerBE } from '@/entities/blockElement/DOContainerBE';
 import { DOHeadingBE } from '@/entities/blockElement/DOHeadingBE';
 import { DORootBE } from '@/entities/blockElement/DORootBE';
 import { DOTextBE } from '@/entities/blockElement/DOTextBE';
-import { rootStore } from '@/stores/RootStore';
+import { rootStore, useStore } from '@/stores/RootStore';
 import { BEInput } from './BEInput';
 import { ContainerBETag } from './ContainerBETag';
 import { HeadingBETag } from './HeadingBETag';
@@ -12,6 +12,8 @@ import { RootBETag } from './RootBETag';
 import { TextBETag } from './TextBETag';
 import { DOListableBE } from '@/entities/blockElement/DOListableBE';
 import { ListableBETag } from './ListableBETag';
+import { DO_BE } from '@/entities/blockElement/BEInterfaces';
+import React from 'react';
 
 interface IBERendererProps {
   beIds: string[];
@@ -20,12 +22,26 @@ interface IBERendererProps {
 
 export const BERenderer = (props: IBERendererProps) => {
   const { beIds, isRootLevel } = props;
-  const store = rootStore.BEStore;
-  const BEs = store.useGetBEs;
+  const store = useStore();
+  const BEs = store.BEStore.useGetBEs;
+
+  const numberedListCounter = (indexOfId: number, count: number): number => {
+    const prevBE = indexOfId > 0 ? BEs[beIds[indexOfId - 1]] : null;
+
+    if (!prevBE || prevBE.tag !== store.enums.BE_TAGS.NUMBERED_LIST) {
+      return count;
+    }
+
+    return numberedListCounter(indexOfId - 1, count + 1);
+  };
 
   const elements = beIds.map((id, index) => {
     const BE = BEs[id];
-    const prevBE = index > 0 ? BEs[beIds[index - 1]] : null;
+
+    const numberedListCount =
+      BE.tag === store.enums.BE_TAGS.NUMBERED_LIST
+        ? numberedListCounter(index, 1)
+        : undefined;
 
     if (BE instanceof DORootBE) {
       return (
@@ -53,7 +69,11 @@ export const BERenderer = (props: IBERendererProps) => {
 
     if (BE instanceof DOListableBE) {
       return (
-        <ListableBETag key={BE.id} data={BE}>
+        <ListableBETag
+          key={BE.id}
+          data={BE}
+          numberedListCount={numberedListCount}
+        >
           <BERenderer beIds={BE.contents.childrenIds} />
         </ListableBETag>
       );
