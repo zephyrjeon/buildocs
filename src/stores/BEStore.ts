@@ -3,6 +3,7 @@ import {
   IDOBaseBE,
   IDOContainerBE,
   IDOHeadingBE,
+  IDOListableBE,
   IDORecursiveBE,
   IDORootBE,
   IDOTextBE,
@@ -15,6 +16,7 @@ import { DORootBE } from '@/entities/blockElement/DORootBE';
 import { DOTextBE } from '@/entities/blockElement/DOTextBE';
 import { create } from 'zustand';
 import { RootStore } from './RootStore';
+import { DOListableBE } from '@/entities/blockElement/DOListableBE';
 
 export enum BE_RELATIONS {
   SELF = 'SELF',
@@ -107,11 +109,12 @@ export class BEStore {
   setBE(BE: DO_BE | IDOBaseBE) {
     if (BE instanceof DOBaseBlockElement) {
       this.setState(SET_STATE_ACTIONS.ADD, BE);
+      return BE;
     } else {
-      this.setState(SET_STATE_ACTIONS.ADD, this.instantiateDO(BE));
+      const DOBE = this.instantiateDO(BE);
+      this.setState(SET_STATE_ACTIONS.ADD, DOBE);
+      return DOBE;
     }
-
-    return this.getBEById(BE.id);
   }
 
   removeBE(id: string) {
@@ -138,10 +141,7 @@ export class BEStore {
         return this.rootStore.di.utils.deepFreeze(
           new DOTextBE(BE as IDOTextBE)
         );
-      // case this.rootStore.di.enums.BE_TAGS.BULLETED_LIST:
-      // case this.rootStore.di.enums.BE_TAGS.NUMBERED_LIST:
-      // case this.rootStore.di.enums.BE_TAGS.IMAGE:
-      // case this.rootStore.di.enums.BE_TAGS.LINK:
+
       case this.rootStore.di.enums.BE_TAGS.CONTAINER_ROW:
         return this.rootStore.di.utils.deepFreeze(
           new DOContainerBE(BE as IDOContainerBE)
@@ -150,6 +150,14 @@ export class BEStore {
         return this.rootStore.di.utils.deepFreeze(
           new DOContainerBE(BE as IDOContainerBE)
         );
+      case this.rootStore.di.enums.BE_TAGS.TOGGLE_HEADING_LIST:
+      case this.rootStore.di.enums.BE_TAGS.TOGGLE_LIST:
+      case this.rootStore.di.enums.BE_TAGS.BULLETED_LIST:
+      case this.rootStore.di.enums.BE_TAGS.NUMBERED_LIST:
+        return this.rootStore.di.utils.deepFreeze(
+          new DOListableBE(BE as IDOListableBE)
+        );
+
       default:
         throw new Error('Unregistered BE tag');
     }

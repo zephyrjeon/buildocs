@@ -9,6 +9,7 @@ interface IContainerBETagProps {
 
 export const ContainerBETag = (props: IContainerBETagProps) => {
   const { data, children } = props;
+
   return (
     <BaseBETag isEditable BE={data}>
       <div className="min-h-40">{children}</div>

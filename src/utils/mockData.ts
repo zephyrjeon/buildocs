@@ -8,7 +8,7 @@ export const mockBEData1: IDOBaseBE[] = [
     tag: APP_ENUMS.BE_TAGS.ROOT,
     parentId: 'page',
     contents: {
-      childrenIds: ['be1', 'be2', 'be4'],
+      childrenIds: ['be1', 'be2', 'be4', 'be6'],
     },
   },
   {
@@ -49,6 +49,78 @@ export const mockBEData1: IDOBaseBE[] = [
     parentId: 'be4',
     contents: {
       innerText: `Drag and Drop me`,
+    },
+  },
+  {
+    id: 'be6',
+    tag: APP_ENUMS.BE_TAGS.TOGGLE_HEADING_LIST,
+    parentId: 'root',
+    contents: {
+      childrenIds: ['be7'],
+      innerText: `be6 inner text`,
+    },
+  },
+  {
+    id: 'be7',
+    tag: APP_ENUMS.BE_TAGS.TOGGLE_LIST,
+    parentId: 'be6',
+    contents: {
+      childrenIds: ['be8', 'be9', 'be10'],
+      innerText: `be7 inner text`,
+    },
+  },
+  {
+    id: 'be8',
+    tag: APP_ENUMS.BE_TAGS.NUMBERED_LIST,
+    parentId: 'be7',
+    contents: {
+      childrenIds: ['be11', 'be12', 'be13'],
+      innerText: `be8 inner text`,
+    },
+  },
+  {
+    id: 'be9',
+    tag: APP_ENUMS.BE_TAGS.NUMBERED_LIST,
+    parentId: 'be7',
+    contents: {
+      childrenIds: [],
+      innerText: `be9 inner text`,
+    },
+  },
+  {
+    id: 'be10',
+    tag: APP_ENUMS.BE_TAGS.NUMBERED_LIST,
+    parentId: 'be7',
+    contents: {
+      childrenIds: [],
+      innerText: `be10 inner text`,
+    },
+  },
+  {
+    id: 'be11',
+    tag: APP_ENUMS.BE_TAGS.BULLETED_LIST,
+    parentId: 'be8',
+    contents: {
+      childrenIds: [],
+      innerText: `be11 inner text`,
+    },
+  },
+  {
+    id: 'be12',
+    tag: APP_ENUMS.BE_TAGS.BULLETED_LIST,
+    parentId: 'be8',
+    contents: {
+      childrenIds: [],
+      innerText: `be12 inner text`,
+    },
+  },
+  {
+    id: 'be13',
+    tag: APP_ENUMS.BE_TAGS.BULLETED_LIST,
+    parentId: 'be8',
+    contents: {
+      childrenIds: [],
+      innerText: `be13 inner text`,
     },
   },
 ];

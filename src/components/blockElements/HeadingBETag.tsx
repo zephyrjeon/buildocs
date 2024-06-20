@@ -16,7 +16,7 @@ export const HeadingBETag = (props: IHeadingBETagProps) => {
 
   return (
     <BaseBETag isEditable BE={data}>
-      <p
+      <h1
         // draggable
         // contentEditable
         {...editableAttr}
@@ -24,7 +24,7 @@ export const HeadingBETag = (props: IHeadingBETagProps) => {
         onInput={(e) => console.log(13, e.currentTarget.innerText)}
       >
         {data.contents.innerText}
-      </p>
+      </h1>
     </BaseBETag>
   );
 };

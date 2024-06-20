@@ -197,34 +197,30 @@ export class BEEditorStore {
       );
 
       this.updateBE(parentBE, {
-        contents: { childrenIds: childrenIdsForParentBE },
+        contents: { ...parentBE.contents, childrenIds: childrenIdsForParentBE },
       });
+
+      let childrenIdsForTargetBE: string[] = [];
 
       // when position is TOP, draggingBE is placed as the first children of targetBE
       if (position === BE_DROP_POSITION.TOP) {
-        const childrenIdsForTargetBE =
+        childrenIdsForTargetBE =
           parentBE.id === targetBE.id
             ? [BE.id, ...childrenIdsForParentBE]
             : [BE.id, ...targetBE.contents.childrenIds];
-        this.updateBE(targetBE, {
-          contents: { childrenIds: childrenIdsForTargetBE },
-        });
       }
 
       // when position is BOTTM, draggingBE is placed as the last children of targetBE
       if (position === BE_DROP_POSITION.BOTTOM) {
-        const childrenIdsForTargetBE =
+        childrenIdsForTargetBE =
           parentBE.id === targetBE.id
             ? [...childrenIdsForParentBE, BE.id]
             : [...targetBE.contents.childrenIds, BE.id];
-        this.updateBE(targetBE, {
-          contents: { childrenIds: childrenIdsForTargetBE },
-        });
       }
 
       // when position is NEXT, draggingBE is placed as the next sibling of targetBE
       if (position === BE_DROP_POSITION.NEXT) {
-        const childrenIdsForTargetBE =
+        childrenIdsForTargetBE =
           parentBE.id === targetBE.id
             ? childrenIdsForParentBE
             : targetBE.contents.childrenIds.map((id) => id);
@@ -234,11 +230,14 @@ export class BEEditorStore {
         );
 
         childrenIdsForTargetBE.splice(index + 1, 0, BE.id);
-
-        this.updateBE(targetBE, {
-          contents: { childrenIds: childrenIdsForTargetBE },
-        });
       }
+
+      this.updateBE(targetBE, {
+        contents: {
+          ...targetBE.contents,
+          childrenIds: childrenIdsForTargetBE,
+        },
+      });
     });
 
     this.setDraggedOverBE(null);
@@ -292,11 +291,26 @@ export class BEEditorStore {
   }
 
   private getContentsPropertiesByTag(tag: BE_TAGS): BE_CONTENTS {
-    return tag === this.rootStore.di.enums.BE_TAGS.HEADING
-      ? { innerText: '' }
-      : tag === this.rootStore.di.enums.BE_TAGS.TEXT
-      ? { innerText: '' }
-      : { childrenIds: [] };
+    switch (tag) {
+      case this.rootStore.di.enums.BE_TAGS.ROOT:
+        return { childrenIds: [] };
+      case this.rootStore.di.enums.BE_TAGS.HEADING:
+        return { innerText: '' };
+      case this.rootStore.di.enums.BE_TAGS.TEXT:
+        return { innerText: '' };
+      case this.rootStore.di.enums.BE_TAGS.CONTAINER_ROW:
+        return { childrenIds: [] };
+      case this.rootStore.di.enums.BE_TAGS.CONTAINER_COLUMN:
+        return { childrenIds: [] };
+      case this.rootStore.di.enums.BE_TAGS.TOGGLE_HEADING_LIST:
+      case this.rootStore.di.enums.BE_TAGS.TOGGLE_LIST:
+      case this.rootStore.di.enums.BE_TAGS.BULLETED_LIST:
+      case this.rootStore.di.enums.BE_TAGS.NUMBERED_LIST:
+        return { innerText: '', childrenIds: [] };
+
+      default:
+        throw new Error('Unregistered BE tag');
+    }
   }
 
   // Trasform BE data into DO_BE instance in a corresponding form by its tag
