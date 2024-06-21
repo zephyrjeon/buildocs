@@ -63,7 +63,9 @@ export const ListableBETag = (props: IListableBETagProps) => {
         <div className="mr-2 w-8 flex justify-center r">{getListIcon()}</div>
         <p {...editableAttr}>{data.contents.innerText}</p>
       </div>
-      {shouldShowChildren && <div className="pl-4 mt-2">{children}</div>}
+      <div className={cn('pl-4 mt-2', shouldShowChildren ? 'block' : 'hidden')}>
+        {children}
+      </div>
     </BaseBETag>
   );
 };

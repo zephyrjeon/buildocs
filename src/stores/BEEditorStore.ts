@@ -12,9 +12,9 @@ import { BE_RELATIONS } from './BEStore';
 import { RootStore } from './RootStore';
 
 export enum BE_DROP_POSITION {
-  TOP = 'TOP',
-  BOTTOM = 'BOTTOM',
-  NEXT = 'NEXT',
+  PREV = 'PREV', //  draggingBE is placed as the previous sibling of draggedOverBEState.target
+  NEXT = 'NEXT', //  draggingBE is placed as the next sibling of draggedOverBEState.target
+  INSIDE = 'INSIDE', //  draggingBE is placed as the last children of draggedOverBEState.target
 }
 
 type DraggedOverBEState = {
@@ -86,12 +86,12 @@ export class BEEditorStore {
   setDraggedOverBE(data: DraggedOverBEState | null) {
     if (!data) return this.setState({ draggedOverBEState: null });
 
-    // Do not allow to set when draggedOverBE is leafBE and dropPosition is either TOP or BOTTOM of the inside
+    // Do not allow to set when draggedOverBE is leafBE and dropPosition is INSIDE
     const isRecursive = this.rootStore.BEStore.BETypeGuards.isRecursive(
       data.target
     );
 
-    if (!isRecursive && data.position !== BE_DROP_POSITION.NEXT) {
+    if (!isRecursive && data.position === BE_DROP_POSITION.INSIDE) {
       return this.setState({ draggedOverBEState: null });
     }
 
@@ -164,7 +164,7 @@ export class BEEditorStore {
 
     if (draggingBEs.length === 0 || !draggedOverBEState) return;
 
-    // if the targetBE to reoder onto is itself or children of draggingBE, prevent reorder
+    // if the draggedOverBE to reoder onto is itself or children of draggingBE, prevent reorder
     const index = draggingBEs.findIndex((BE) => {
       const relation = this.rootStore.BEStore.getRelationOf(
         draggedOverBEState.target,
@@ -179,63 +179,63 @@ export class BEEditorStore {
       throw new Error('Cannot reoder BE onto itself or its children');
 
     const position = draggedOverBEState.position;
-    const targetBE =
-      position === BE_DROP_POSITION.NEXT
-        ? this.rootStore.BEStore.getParentBE(draggedOverBEState.target)
-        : draggedOverBEState.target;
-    const isTargetRecursive =
-      this.rootStore.BEStore.BETypeGuards.isRecursive(targetBE);
+    const newParentBE =
+      position === BE_DROP_POSITION.INSIDE
+        ? draggedOverBEState.target
+        : this.rootStore.BEStore.getParentBE(draggedOverBEState.target);
+    const isNewParentRecursive =
+      this.rootStore.BEStore.BETypeGuards.isRecursive(newParentBE);
 
     draggingBEs.forEach((BE) => {
-      if (!isTargetRecursive) throw new Error('TargetBE must be a recursiveBE');
+      if (!isNewParentRecursive)
+        throw new Error('New Parent BE must be a recursiveBE');
 
-      this.updateBE(BE, { parentId: targetBE.id });
-
-      const parentBE = this.rootStore.BEStore.getParentBE(BE);
-      const childrenIdsForParentBE = parentBE.contents.childrenIds.filter(
+      const oldParentBE = this.rootStore.BEStore.getParentBE(BE);
+      const childrenIdsForOldParentBE = oldParentBE.contents.childrenIds.filter(
         (id) => id !== BE.id
       );
 
-      this.updateBE(parentBE, {
-        contents: { ...parentBE.contents, childrenIds: childrenIdsForParentBE },
+      this.updateBE(BE, { parentId: newParentBE.id });
+      this.updateBE(oldParentBE, {
+        contents: {
+          ...oldParentBE.contents,
+          childrenIds: childrenIdsForOldParentBE,
+        },
       });
 
-      let childrenIdsForTargetBE: string[] = [];
+      let childrenIdsForNewParentBE: string[] = [];
 
-      // when position is TOP, draggingBE is placed as the first children of targetBE
-      if (position === BE_DROP_POSITION.TOP) {
-        childrenIdsForTargetBE =
-          parentBE.id === targetBE.id
-            ? [BE.id, ...childrenIdsForParentBE]
-            : [BE.id, ...targetBE.contents.childrenIds];
-      }
+      if (
+        position === BE_DROP_POSITION.PREV ||
+        position === BE_DROP_POSITION.NEXT
+      ) {
+        childrenIdsForNewParentBE =
+          oldParentBE.id === newParentBE.id
+            ? childrenIdsForOldParentBE
+            : newParentBE.contents.childrenIds.map((id) => id);
 
-      // when position is BOTTM, draggingBE is placed as the last children of targetBE
-      if (position === BE_DROP_POSITION.BOTTOM) {
-        childrenIdsForTargetBE =
-          parentBE.id === targetBE.id
-            ? [...childrenIdsForParentBE, BE.id]
-            : [...targetBE.contents.childrenIds, BE.id];
-      }
-
-      // when position is NEXT, draggingBE is placed as the next sibling of targetBE
-      if (position === BE_DROP_POSITION.NEXT) {
-        childrenIdsForTargetBE =
-          parentBE.id === targetBE.id
-            ? childrenIdsForParentBE
-            : targetBE.contents.childrenIds.map((id) => id);
-
-        const index = childrenIdsForTargetBE.findIndex(
+        const index = childrenIdsForNewParentBE.findIndex(
           (id) => id === draggedOverBEState.target.id
         );
 
-        childrenIdsForTargetBE.splice(index + 1, 0, BE.id);
+        childrenIdsForNewParentBE.splice(
+          position === BE_DROP_POSITION.PREV ? index : index + 1,
+          0,
+          BE.id
+        );
       }
 
-      this.updateBE(targetBE, {
+      if (position === BE_DROP_POSITION.INSIDE) {
+        childrenIdsForNewParentBE =
+          oldParentBE.id === newParentBE.id
+            ? [...childrenIdsForOldParentBE, BE.id]
+            : [...newParentBE.contents.childrenIds, BE.id];
+      }
+
+      this.updateBE(newParentBE, {
         contents: {
-          ...targetBE.contents,
-          childrenIds: childrenIdsForTargetBE,
+          ...newParentBE.contents,
+          childrenIds: childrenIdsForNewParentBE,
         },
       });
     });

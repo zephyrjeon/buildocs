@@ -41,23 +41,23 @@ export const BaseBETag = (props: IBaseBETagProps) => {
     store.BEEditStore.removeBE(BE);
   };
 
-  const isRecursive = store.BEStore.BETypeGuards.isRecursive(BE);
+  const isFirstChildBE =
+    store.BEStore.getParentBE(BE).contents.childrenIds[0] === BE.id;
 
   const isHovered = BE.id === store.BEEditStore.useHoveredBE?.id;
   const shouldShowActionBtn = isHovered || isDropdownOpen;
 
   const draggedOverBE = store.BEEditStore.useDraggedOverBE;
   const isDraggedOver = BE.id === draggedOverBE?.target?.id;
-  const isDraggedOverOnTop =
-    isDraggedOver && draggedOverBE?.position === BE_DROP_POSITION.TOP;
-  const isDraggedOverOnBottom =
-    isDraggedOver && draggedOverBE?.position === BE_DROP_POSITION.BOTTOM;
+  const isDraggedOverOnPrev =
+    isDraggedOver && draggedOverBE?.position === BE_DROP_POSITION.PREV;
   const isDraggedOverOnNext =
     isDraggedOver && draggedOverBE?.position === BE_DROP_POSITION.NEXT;
+  const isDraggedOverInside =
+    isDraggedOver && draggedOverBE?.position === BE_DROP_POSITION.INSIDE;
 
   const useDraggingBEs = store.BEEditStore.useDraggingBEs;
   const isDragging = !!useDraggingBEs.find((be) => be.id === BE.id);
-  // console.log(57, useDraggingBEs);
 
   return (
     <div
@@ -71,7 +71,7 @@ export const BaseBETag = (props: IBaseBETagProps) => {
         e.preventDefault(); // without this, onDrop is not executed
         store.BEEditStore.setDraggedOverBE({
           target: BE,
-          position: BE_DROP_POSITION.BOTTOM,
+          position: BE_DROP_POSITION.INSIDE,
         });
       }}
       onDragEnter={(e) => {}}
@@ -102,35 +102,34 @@ export const BaseBETag = (props: IBaseBETagProps) => {
           onRemove={handleRemove}
         />
       )}
+      {isFirstChildBE && (
+        <DropPositionIndicator
+          isActive={isDraggedOverOnPrev}
+          onDragOver={() =>
+            store.BEEditStore.setDraggedOverBE({
+              target: BE,
+              position: BE_DROP_POSITION.PREV,
+            })
+          }
+        />
+      )}
       <div
         className={cn(
           'p-2 border-2 relative',
-          isDraggedOverOnBottom && 'border-blue-500',
-          isDragging && 'border-violet-500',
-          isRecursive && 'pt-0'
+          isDraggedOverInside && 'border-blue-500/75',
+          isDragging && 'border-violet-500/75'
         )}
       >
-        {isRecursive && (
-          <DropPositionIndicator
-            onDragOver={() =>
-              store.BEEditStore.setDraggedOverBE({
-                target: BE,
-                position: BE_DROP_POSITION.TOP,
-              })
-            }
-            isActive={isDraggedOverOnTop}
-          />
-        )}
         <div draggable={false}>{children}</div>
       </div>
       <DropPositionIndicator
+        isActive={isDraggedOverOnNext}
         onDragOver={() =>
           store.BEEditStore.setDraggedOverBE({
             target: BE,
             position: BE_DROP_POSITION.NEXT,
           })
         }
-        isActive={isDraggedOverOnNext}
       />
     </div>
   );
@@ -151,7 +150,7 @@ const DropPositionIndicator = (props: IDropPositionIndicator) => {
         e.preventDefault();
         onDragOver();
       }}
-      className={cn('p-1', isActive && 'bg-blue-500')}
+      className={cn('p-1', isActive && 'bg-blue-500/75')}
     />
   );
 };

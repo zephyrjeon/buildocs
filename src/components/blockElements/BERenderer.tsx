@@ -30,18 +30,13 @@ export const BERenderer = (props: IBERendererProps) => {
 
     if (!prevBE || prevBE.tag !== store.enums.BE_TAGS.NUMBERED_LIST) {
       return count;
+    } else {
+      return numberedListCounter(indexOfId - 1, count + 1);
     }
-
-    return numberedListCounter(indexOfId - 1, count + 1);
   };
 
   const elements = beIds.map((id, index) => {
     const BE = BEs[id];
-
-    const numberedListCount =
-      BE.tag === store.enums.BE_TAGS.NUMBERED_LIST
-        ? numberedListCounter(index, 1)
-        : undefined;
 
     if (BE instanceof DORootBE) {
       return (
@@ -68,6 +63,11 @@ export const BERenderer = (props: IBERendererProps) => {
     }
 
     if (BE instanceof DOListableBE) {
+      const numberedListCount =
+        BE.tag === store.enums.BE_TAGS.NUMBERED_LIST
+          ? numberedListCounter(index, 1)
+          : undefined;
+
       return (
         <ListableBETag
           key={BE.id}
