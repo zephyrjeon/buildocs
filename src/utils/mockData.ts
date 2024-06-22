@@ -37,7 +37,7 @@ export const mockBEData1: IDOBaseBE[] = [
   },
   {
     id: 'be4',
-    tag: APP_ENUMS.BE_TAGS.CONTAINER_ROW,
+    tag: APP_ENUMS.BE_TAGS.CONTAINER_COLUMN,
     parentId: 'root',
     contents: {
       childrenIds: ['be5'],

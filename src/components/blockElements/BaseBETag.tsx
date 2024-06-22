@@ -1,4 +1,3 @@
-import { APP_ENUMS } from '@/common/enums';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,17 +28,18 @@ export interface IBaseBETagProps {
 export const BaseBETag = (props: IBaseBETagProps) => {
   const { isEditable, children, BE } = props;
   const store = useStore();
-  const [selectedTag, setSelectedTagTag] = React.useState<BE_TAGS>(BE.tag);
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
 
   const handleSelectTag = (tag: BE_TAGS) => {
-    setSelectedTagTag(tag);
     store.BEEditStore.updateBE(BE, { tag });
   };
 
   const handleRemove = () => {
     store.BEEditStore.removeBE(BE);
   };
+
+  const isParentContainerColumn =
+    store.BEStore.getParentBE(BE).tag === store.enums.BE_TAGS.CONTAINER_COLUMN;
 
   const isFirstChildBE =
     store.BEStore.getParentBE(BE).contents.childrenIds[0] === BE.id;
@@ -61,7 +61,6 @@ export const BaseBETag = (props: IBaseBETagProps) => {
 
   return (
     <div
-      draggable
       onDragStart={(e) => {
         e.stopPropagation(); // prevent parent BE's onDragStart
         store.BEEditStore.setDraggingBE(BE);
@@ -74,7 +73,6 @@ export const BaseBETag = (props: IBaseBETagProps) => {
           position: BE_DROP_POSITION.INSIDE,
         });
       }}
-      onDragEnter={(e) => {}}
       onDragLeave={() => {
         store.BEEditStore.setDraggedOverBE(null);
       }}
@@ -82,9 +80,7 @@ export const BaseBETag = (props: IBaseBETagProps) => {
         store.BEEditStore.setDraggedOverBE(null);
         store.BEEditStore.setDraggingBE(null);
       }}
-      onDrop={() => {
-        store.BEEditStore.reoderBE();
-      }}
+      onDrop={() => store.BEEditStore.reoderBE()}
       onMouseLeave={() => {
         store.BEEditStore.setHoveredBE(null);
       }}
@@ -92,17 +88,16 @@ export const BaseBETag = (props: IBaseBETagProps) => {
         e.stopPropagation();
         store.BEEditStore.setHoveredBE(BE);
       }}
-      className="relative"
+      className="relative flex-1"
     >
       {shouldShowActionBtn && (
         <ActionBtn
-          selectedTag={selectedTag}
           onSelectTag={handleSelectTag}
           onOpenChange={setIsDropdownOpen}
           onRemove={handleRemove}
         />
       )}
-      {isFirstChildBE && (
+      {!isParentContainerColumn && isFirstChildBE && (
         <DropPositionIndicator
           isActive={isDraggedOverOnPrev}
           onDragOver={() =>
@@ -113,24 +108,51 @@ export const BaseBETag = (props: IBaseBETagProps) => {
           }
         />
       )}
-      <div
-        className={cn(
-          'p-2 border-2 relative',
-          isDraggedOverInside && 'border-blue-500/75',
-          isDragging && 'border-violet-500/75'
+      <div className="flex">
+        {isParentContainerColumn && isFirstChildBE && (
+          <DropPositionIndicator
+            isActive={isDraggedOverOnPrev}
+            onDragOver={() =>
+              store.BEEditStore.setDraggedOverBE({
+                target: BE,
+                position: BE_DROP_POSITION.PREV,
+              })
+            }
+          />
         )}
-      >
-        <div draggable={false}>{children}</div>
+        <div
+          draggable
+          className={cn(
+            'p-2 border-2 relative flex-1',
+            isDraggedOverInside && 'border-blue-500/75',
+            isDragging && 'border-violet-500/75'
+          )}
+        >
+          {children}
+        </div>
+        {isParentContainerColumn && (
+          <DropPositionIndicator
+            isActive={isDraggedOverOnNext}
+            onDragOver={() =>
+              store.BEEditStore.setDraggedOverBE({
+                target: BE,
+                position: BE_DROP_POSITION.NEXT,
+              })
+            }
+          />
+        )}
       </div>
-      <DropPositionIndicator
-        isActive={isDraggedOverOnNext}
-        onDragOver={() =>
-          store.BEEditStore.setDraggedOverBE({
-            target: BE,
-            position: BE_DROP_POSITION.NEXT,
-          })
-        }
-      />
+      {!isParentContainerColumn && (
+        <DropPositionIndicator
+          isActive={isDraggedOverOnNext}
+          onDragOver={() =>
+            store.BEEditStore.setDraggedOverBE({
+              target: BE,
+              position: BE_DROP_POSITION.NEXT,
+            })
+          }
+        />
+      )}
     </div>
   );
 };
@@ -156,17 +178,17 @@ const DropPositionIndicator = (props: IDropPositionIndicator) => {
 };
 
 interface IActionBtnProps {
-  selectedTag: BE_TAGS;
   onSelectTag: (selectedTag: BE_TAGS) => void;
   onOpenChange: (isOpen: boolean) => void;
   onRemove: () => void;
 }
 
 const ActionBtn = (props: IActionBtnProps) => {
-  const { onSelectTag, selectedTag, onOpenChange, onRemove } = props;
+  const { onSelectTag, onOpenChange, onRemove } = props;
+  const store = useStore();
 
-  const beTags = Object.values(APP_ENUMS.BE_TAGS).filter(
-    (tag) => tag !== APP_ENUMS.BE_TAGS.ROOT
+  const beTags = Object.values(store.enums.BE_TAGS).filter(
+    (tag) => tag !== store.enums.BE_TAGS.ROOT
   );
 
   return (

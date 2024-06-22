@@ -2,18 +2,16 @@
 
 import { DOContainerBE } from '@/entities/blockElement/DOContainerBE';
 import { DOHeadingBE } from '@/entities/blockElement/DOHeadingBE';
+import { DOListableBE } from '@/entities/blockElement/DOListableBE';
 import { DORootBE } from '@/entities/blockElement/DORootBE';
 import { DOTextBE } from '@/entities/blockElement/DOTextBE';
-import { rootStore, useStore } from '@/stores/RootStore';
+import { useStore } from '@/stores/RootStore';
 import { BEInput } from './BEInput';
 import { ContainerBETag } from './ContainerBETag';
 import { HeadingBETag } from './HeadingBETag';
+import { ListableBETag } from './ListableBETag';
 import { RootBETag } from './RootBETag';
 import { TextBETag } from './TextBETag';
-import { DOListableBE } from '@/entities/blockElement/DOListableBE';
-import { ListableBETag } from './ListableBETag';
-import { DO_BE } from '@/entities/blockElement/BEInterfaces';
-import React from 'react';
 
 interface IBERendererProps {
   beIds: string[];
