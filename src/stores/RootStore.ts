@@ -28,6 +28,10 @@ export class RootStore {
     return this.di.enums;
   }
 
+  get consts() {
+    return this.di.consts;
+  }
+
   log(msg: string) {
     console.log(`RootStore msg: ${msg}`);
   }
