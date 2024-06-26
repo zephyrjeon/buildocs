@@ -16,7 +16,6 @@ import { BE_TAGS, DO_BE } from '@/entities/blockElement/BEInterfaces';
 import { cn } from '@/lib/utils';
 import { BE_DROP_POSITION } from '@/stores/BEEditorStore';
 import { useStore } from '@/stores/RootStore';
-import { GripVertical } from 'lucide-react';
 import React from 'react';
 
 export interface IBaseBETagProps {
@@ -88,15 +87,8 @@ export const BaseBETag = (props: IBaseBETagProps) => {
         e.stopPropagation();
         store.BEEditStore.setHoveredBE(BE);
       }}
-      className="relative flex-1"
+      className="w-full"
     >
-      {shouldShowActionBtn && (
-        <ActionBtn
-          onSelectTag={handleSelectTag}
-          onOpenChange={setIsDropdownOpen}
-          onRemove={handleRemove}
-        />
-      )}
       {!isParentContainerColumn && isFirstChildBE && (
         <DropPositionIndicator
           isActive={isDraggedOverOnPrev}
@@ -123,11 +115,22 @@ export const BaseBETag = (props: IBaseBETagProps) => {
         <div
           draggable
           className={cn(
-            'p-2 border-2 relative flex-1',
+            'p-2 border-2 relative flex-1 border-dashed',
+            'border-border-default',
+            (isHovered || shouldShowActionBtn) &&
+              'border-blue-400 border-solid',
             isDraggedOverInside && 'border-blue-500/75',
             isDragging && 'border-violet-500/75'
           )}
         >
+          {shouldShowActionBtn && (
+            <ActionBar
+              onSelectTag={handleSelectTag}
+              onOpenChange={setIsDropdownOpen}
+              onRemove={handleRemove}
+              activeColor={isDragging ? 'bg-violet-500/75' : 'bg-blue-400'}
+            />
+          )}
           {children}
         </div>
         {isParentContainerColumn && (
@@ -172,19 +175,20 @@ const DropPositionIndicator = (props: IDropPositionIndicator) => {
         e.preventDefault();
         onDragOver();
       }}
-      className={cn('p-1', isActive && 'bg-blue-500/75')}
+      className={cn('p-1', isActive && 'bg-blue-500/50')}
     />
   );
 };
 
-interface IActionBtnProps {
+interface IActionBarProps {
   onSelectTag: (selectedTag: BE_TAGS) => void;
   onOpenChange: (isOpen: boolean) => void;
   onRemove: () => void;
+  activeColor: string;
 }
 
-const ActionBtn = (props: IActionBtnProps) => {
-  const { onSelectTag, onOpenChange, onRemove } = props;
+const ActionBar = (props: IActionBarProps) => {
+  const { onSelectTag, onOpenChange, onRemove, activeColor } = props;
   const store = useStore();
 
   const beTags = Object.values(store.enums.BE_TAGS).filter(
@@ -192,60 +196,68 @@ const ActionBtn = (props: IActionBtnProps) => {
   );
 
   return (
-    <DropdownMenu onOpenChange={onOpenChange}>
-      <DropdownMenuTrigger asChild>
-        <div className="absolute left-[-0.80rem] top-[0rem] text-gray-600 cursor-pointer">
-          <GripVertical />
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Select an action</DropdownMenuLabel>
+    <div className="absolute flex left-0 top-[-22px] w-full justify-between items-end">
+      <div className="text-xs">Todo: component name</div>
+      <DropdownMenu onOpenChange={onOpenChange}>
+        <DropdownMenuTrigger asChild>
+          <div
+            className={cn(
+              'cursor-pointer rounded-tl-[9999px] relative left-[2px] p-[3px] pl-6 pr-4 b-2 h-5',
+              activeColor
+            )}
+          >
+            <span className="text-xs relative bottom-1">Edit</span>
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56">
+          <DropdownMenuLabel>Select an action</DropdownMenuLabel>
 
-        <DropdownMenuSeparator />
+          <DropdownMenuSeparator />
 
-        <DropdownMenuGroup>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <span>Select a type</span>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                {beTags.map((tag) => {
-                  return (
-                    <DropdownMenuItem
-                      key={tag}
-                      onClick={() => onSelectTag(tag)}
-                    >
-                      <span className="first-letter:uppercase">
-                        {tag.toLowerCase()}
-                      </span>
-                    </DropdownMenuItem>
-                  );
-                })}
+          <DropdownMenuGroup>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <span>Select a type</span>
+              </DropdownMenuSubTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent>
+                  {beTags.map((tag) => {
+                    return (
+                      <DropdownMenuItem
+                        key={tag}
+                        onClick={() => onSelectTag(tag)}
+                      >
+                        <span className="first-letter:uppercase">
+                          {tag.toLowerCase()}
+                        </span>
+                      </DropdownMenuItem>
+                    );
+                  })}
 
-                <DropdownMenuSeparator />
+                  <DropdownMenuSeparator />
 
-                <DropdownMenuItem>
-                  <span>More...</span>
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
+                  <DropdownMenuItem>
+                    <span>More...</span>
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuPortal>
 
-            <DropdownMenuItem onClick={onRemove}>
-              <span>Remove</span>
+              <DropdownMenuItem onClick={onRemove}>
+                <span>Remove</span>
+              </DropdownMenuItem>
+            </DropdownMenuSub>
+          </DropdownMenuGroup>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuGroup>
+            <DropdownMenuItem disabled>
+              <span>Keyboard shortcuts</span>
+              <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
             </DropdownMenuItem>
-          </DropdownMenuSub>
-        </DropdownMenuGroup>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuGroup>
-          <DropdownMenuItem disabled>
-            <span>Keyboard shortcuts</span>
-            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 };
