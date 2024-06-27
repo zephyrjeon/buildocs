@@ -28,13 +28,13 @@ body,
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 0 0% 96%;
+    --accent: 0 0% 85%;
     --accent-foreground: 0 0% 9%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 80%;
+    --border: 0 0% 85%;
     --input: 0 0% 90%;
     --ring: 0 0% 4%;
 
