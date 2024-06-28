@@ -20,7 +20,7 @@ export const HeadingBETag = (props: IHeadingBETagProps) => {
         // draggable
         // contentEditable
         {...editableAttr}
-        className="text-4xl"
+        className="text-4xl empty:before:content-['Heading'] empty:before:text-muted-foreground"
         onInput={(e) => console.log(13, e.currentTarget.innerText)}
       >
         {data.contents.innerText}

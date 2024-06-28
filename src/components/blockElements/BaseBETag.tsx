@@ -88,6 +88,7 @@ export const BaseBETag = (props: IBaseBETagProps) => {
       }}
       onDragOver={handleDragOver(BE_DROP_POSITION.INSIDE)}
       onDrop={() => store.BEEditStore.reoderBE()}
+      onClick={(e) => e.stopPropagation()}
       className={'w-full relative'}
     >
       {!isParentContainerColumn && isFirstChildBE && (
@@ -107,7 +108,7 @@ export const BaseBETag = (props: IBaseBETagProps) => {
           draggable
           className={cn(
             'p-2 border-2 relative flex-1 border-dashed',
-            'border-border-default',
+            store.BEEditStore.useIsOutlineVisible && 'border-border-default',
             shouldShowActionOverlay && 'border-blue-400 border-solid',
             isDraggedOverInside && 'border-blue-500/75',
             isDragging && 'border-violet-500/75'
@@ -116,6 +117,7 @@ export const BaseBETag = (props: IBaseBETagProps) => {
           {children}
           {shouldShowActionOverlay && (
             <ActionOverlay
+              BE={BE}
               onSelectTag={handleSelectTag}
               onOpenChange={setIsDropdownOpen}
               onRemove={handleRemove}
@@ -157,6 +159,7 @@ const DropPositionIndicator = (props: IDropPositionIndicator) => {
 };
 
 interface IActionOverlayProps {
+  BE: DO_BE;
   onSelectTag: (selectedTag: BE_TAGS) => void;
   onOpenChange: (isOpen: boolean) => void;
   onRemove: () => void;
@@ -164,7 +167,7 @@ interface IActionOverlayProps {
 }
 
 const ActionOverlay = (props: IActionOverlayProps) => {
-  const { onSelectTag, onOpenChange, onRemove, activeColor } = props;
+  const { BE, onSelectTag, onOpenChange, onRemove, activeColor } = props;
   const store = useStore();
 
   const beTags = Object.values(store.enums.BE_TAGS).filter(
@@ -174,7 +177,9 @@ const ActionOverlay = (props: IActionOverlayProps) => {
   return (
     <>
       <div className="absolute flex left-0 top-[-18px] w-full justify-between items-end">
-        <div className="text-xs">{/* Todo: component name */}</div>
+        <div className="text-xs first-letter:uppercase text-muted-foreground">
+          {BE.tag.toLocaleLowerCase()}
+        </div>
         <DropdownMenu onOpenChange={onOpenChange}>
           <DropdownMenuTrigger asChild>
             <div

@@ -106,7 +106,8 @@ const DocumentIdPage = ({}: DocumentIdPageProps) => {
       {/* <Cover url={document.coverImage} /> */}
       {/* <Toolbar initialData={document} /> */}
       <Editor>
-        <BERenderer beIds={beIds} isRootLevel />
+        <BERenderer beIds={['root']} isRootLevel />
+        {/* <BERenderer beIds={beIds} isRootLevel /> */}
       </Editor>
     </div>
   );
@@ -120,8 +121,10 @@ interface IEditorProps {
 
 const Editor = (props: IEditorProps) => {
   return (
-    <div className="p-10 pb-40 min-h-full flex-1">
-      <div className="md:max-w-3xl lg:max-w-5xl mx-auto">{props.children}</div>
+    <div className="p-10 h-full">
+      <div className="md:max-w-3xl lg:max-w-5xl mx-auto h-full">
+        {props.children}
+      </div>
     </div>
   );
 };

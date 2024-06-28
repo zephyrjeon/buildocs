@@ -20,7 +20,7 @@ const DocumentsPage = () => {
     // const promise = create({ title: "Untitled" })
     //   .then((documentId) => router.push(`/documents/${documentId}`))
 
-    router.push(store.urls.pages('temp1', 'temp2'));
+    router.push(store.urls.pages('document1', 'page1'));
 
     //   toast.promise(promise, {
     //   loading: 'Creating a new note...',

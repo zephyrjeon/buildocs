@@ -12,11 +12,11 @@ import {
 import { DOBaseBlockElement } from '@/entities/blockElement/DOBaseBlockElement';
 import { DOContainerBE } from '@/entities/blockElement/DOContainerBE';
 import { DOHeadingBE } from '@/entities/blockElement/DOHeadingBE';
+import { DOListableBE } from '@/entities/blockElement/DOListableBE';
 import { DORootBE } from '@/entities/blockElement/DORootBE';
 import { DOTextBE } from '@/entities/blockElement/DOTextBE';
 import { create } from 'zustand';
 import { RootStore } from './RootStore';
-import { DOListableBE } from '@/entities/blockElement/DOListableBE';
 
 export enum BE_RELATIONS {
   SELF = 'SELF',

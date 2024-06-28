@@ -34,7 +34,7 @@ export const ListableBETag = (props: IListableBETagProps) => {
       case store.enums.BE_TAGS.NUMBERED_LIST:
         return `${numberedListCount}. `;
       case store.enums.BE_TAGS.BULLETED_LIST:
-        return <Dot size={20} strokeWidth={6} />;
+        return <Dot size={20} strokeWidth={7} />;
       case store.enums.BE_TAGS.TOGGLE_LIST:
       case store.enums.BE_TAGS.TOGGLE_HEADING_LIST:
         return (
@@ -59,11 +59,18 @@ export const ListableBETag = (props: IListableBETagProps) => {
 
   return (
     <BaseBETag isEditable BE={data}>
-      <div className="flex items-center">
-        <div className="mr-2 w-8 flex justify-center r">{getListIcon()}</div>
-        <p {...editableAttr}>{data.contents.innerText}</p>
+      <div className="flex ">
+        <div className="mr-1 w-8 h-8 flex justify-center items-center">
+          {getListIcon()}
+        </div>
+        <p
+          {...editableAttr}
+          className="flex-1 pt-1 empty:before:content-['List'] empty:before:text-muted-foreground"
+        >
+          {data.contents.innerText}
+        </p>
       </div>
-      <div className={cn('pl-4 mt-2', shouldShowChildren ? 'block' : 'hidden')}>
+      <div className={cn('pl-4 mt-1', shouldShowChildren ? 'block' : 'hidden')}>
         {children}
       </div>
     </BaseBETag>

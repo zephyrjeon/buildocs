@@ -81,7 +81,7 @@ export const BERenderer = (props: IBERendererProps) => {
   return (
     <>
       {elements}
-      {isRootLevel && <BEInput />}
+      {/* {isRootLevel && <BEInput />} */}
     </>
   );
 };

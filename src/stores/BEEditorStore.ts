@@ -23,20 +23,22 @@ type DraggedOverBEState = {
 };
 
 interface IState {
-  focusedBE: DO_BE | null; // BE that is being edited
-  hoveredBE: DO_BE | null; // BE that is being edited
+  focusedBERef: HTMLElement | null;
+  hoveredBE: DO_BE | null;
   draggingBEs: DO_BE[];
   draggedOverBEState: DraggedOverBEState | null;
+  isOutlineVisible: boolean;
 }
 
 export class BEEditorStore {
   rootStore: RootStore;
 
   private state = create<IState>()(() => ({
-    focusedBE: null,
+    focusedBERef: null,
     hoveredBE: null,
     draggingBEs: [],
     draggedOverBEState: null,
+    isOutlineVisible: false,
   }));
 
   // This is a react hook. When state updated, rerender tirggered by Zustand. Use these use[...] methods only for UI
@@ -57,6 +59,10 @@ export class BEEditorStore {
     this.rootStore = rootStore;
   }
 
+  get useFocusedBERef() {
+    return this.useState.focusedBERef;
+  }
+
   get useHoveredBE() {
     return this.useState.hoveredBE;
   }
@@ -67,6 +73,14 @@ export class BEEditorStore {
 
   get useDraggingBEs() {
     return this.useState.draggingBEs;
+  }
+
+  get useIsOutlineVisible() {
+    return this.useState.isOutlineVisible;
+  }
+
+  setFocusedBERef(BE: any) {
+    this.setState({ focusedBERef: BE });
   }
 
   setHoveredBE(BE: DO_BE | null) {
@@ -106,6 +120,10 @@ export class BEEditorStore {
     }
 
     this.setState({ draggedOverBEState: data });
+  }
+
+  toggleIsOutlineVisible() {
+    this.setState({ isOutlineVisible: !this.getState.isOutlineVisible });
   }
 
   createBE(data: Partial<Omit<DO_BE, 'id'>>) {
