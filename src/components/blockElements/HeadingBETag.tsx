@@ -1,4 +1,6 @@
 import { DOHeadingBE } from '@/entities/blockElement/DOHeadingBE';
+import { useThrottle } from '@/hooks/useThrottle';
+import { useStore } from '@/stores/RootStore';
 import React from 'react';
 import { BaseBETag } from './BaseBETag';
 
@@ -13,17 +15,23 @@ interface IHeadingBETagProps {
 
 export const HeadingBETag = (props: IHeadingBETagProps) => {
   const { data } = props;
+  const store = useStore();
+  const innerTextRef = React.useRef(data.contents.innerText);
+
+  const handleInput = useThrottle((innerText: string) =>
+    store.BEEditStore.updateBE(data, {
+      contents: { innerText },
+    })
+  );
 
   return (
     <BaseBETag isEditable BE={data}>
       <h1
-        // draggable
-        // contentEditable
         {...editableAttr}
-        className="text-4xl empty:before:content-['Heading'] empty:before:text-muted-foreground"
-        onInput={(e) => console.log(13, e.currentTarget.innerText)}
+        className="text-4xl font-medium empty:before:content-['Heading'] empty:before:text-muted-foreground"
+        onInput={(e) => handleInput(e.currentTarget.innerText)}
       >
-        {data.contents.innerText}
+        {innerTextRef.current}
       </h1>
     </BaseBETag>
   );

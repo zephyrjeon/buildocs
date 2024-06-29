@@ -1,7 +1,8 @@
 import { DOTextBE } from '@/entities/blockElement/DOTextBE';
+import { useThrottle } from '@/hooks/useThrottle';
+import { useStore } from '@/stores/RootStore';
 import React from 'react';
 import { BaseBETag } from './BaseBETag';
-import { useStore } from '@/stores/RootStore';
 
 const editableAttr: React.HTMLAttributes<HTMLElement> = {
   contentEditable: true,
@@ -15,6 +16,14 @@ interface ITextBETagProps {
 export const TextBETag = (props: ITextBETagProps) => {
   const { data } = props;
   const store = useStore();
+  // Use ref instead of rendering value of data.contents.innerText directly to prevent cursor from jumping to the start of contentEditable element upon update.
+  const innerTextRef = React.useRef(data.contents.innerText);
+
+  const handleInput = useThrottle((innerText: string) =>
+    store.BEEditStore.updateBE(data, {
+      contents: { innerText },
+    })
+  );
 
   const handleRef = (ref: HTMLParagraphElement | null) => {
     const childrenIds = store.BEStore.getRootBE.contents.childrenIds;
@@ -30,10 +39,10 @@ export const TextBETag = (props: ITextBETagProps) => {
       <p
         ref={handleRef}
         {...editableAttr}
-        onInput={(e) => console.log(14, e.currentTarget.innerText)}
-        className="focus:empty:before:content-['Start_typing_something_on_me_:)'] focus:empty:before:text-muted-foreground"
+        onInput={(e) => handleInput(e.currentTarget.innerText)}
+        className="px-2 focus:empty:before:content-['Start_typing_something_on_me_:)'] focus:empty:before:text-muted-foreground max-w-full"
       >
-        {data.contents.innerText}
+        {innerTextRef.current}
       </p>
     </BaseBETag>
   );

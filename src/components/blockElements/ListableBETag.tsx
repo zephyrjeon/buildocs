@@ -1,10 +1,11 @@
 import { DOListableBE } from '@/entities/blockElement/DOListableBE';
-import React from 'react';
-import { BaseBETag } from './BaseBETag';
+import { useThrottle } from '@/hooks/useThrottle';
+import { cn } from '@/lib/utils';
 import { useStore } from '@/stores/RootStore';
 import { Dot, Triangle } from 'lucide-react';
+import React from 'react';
 import { Button } from '../ui/button';
-import { cn } from '@/lib/utils';
+import { BaseBETag } from './BaseBETag';
 
 const editableAttr: React.HTMLAttributes<HTMLElement> = {
   contentEditable: true,
@@ -20,14 +21,22 @@ interface IListableBETagProps {
 export const ListableBETag = (props: IListableBETagProps) => {
   const { data, children, numberedListCount } = props;
   const store = useStore();
+  const innerTextRef = React.useRef(data.contents.innerText);
   const [isToggled, setIsToggled] = React.useState(false);
 
   const isToggleable =
     data.tag === store.enums.BE_TAGS.TOGGLE_LIST ||
     data.tag === store.enums.BE_TAGS.TOGGLE_HEADING_LIST;
+  const isToggleHeading = data.tag === store.enums.BE_TAGS.TOGGLE_HEADING_LIST;
   const shouldShowChildren =
     data.contents.childrenIds.length > 0 &&
     (!isToggleable || (isToggleable && !isToggled));
+
+  const handleInput = useThrottle((innerText: string) =>
+    store.BEEditStore.updateBE(data, {
+      contents: { innerText },
+    })
+  );
 
   const getListIcon = () => {
     switch (data.tag) {
@@ -45,10 +54,10 @@ export const ListableBETag = (props: IListableBETagProps) => {
             }}
             variant="ghost"
             size="icon"
-            className="w-8 h-8"
+            className={cn('w-6 h-6', isToggleHeading && 'w-8 h-8')}
           >
             <Triangle
-              size={18}
+              size={isToggleHeading ? 22 : 18}
               strokeWidth={2}
               className={cn('rotate-180', isToggled && 'rotate-90')}
             />
@@ -60,17 +69,27 @@ export const ListableBETag = (props: IListableBETagProps) => {
   return (
     <BaseBETag isEditable BE={data}>
       <div className="flex ">
-        <div className="mr-1 w-8 h-8 flex justify-center items-center">
+        <div
+          className={cn(
+            'mr-1 w-8 h-6 flex justify-center items-center',
+            isToggleHeading && 'h-10'
+          )}
+        >
           {getListIcon()}
         </div>
         <p
           {...editableAttr}
-          className="flex-1 pt-1 empty:before:content-['List'] empty:before:text-muted-foreground"
+          className={cn(
+            "flex-1 empty:before:content-['List'] empty:before:text-muted-foreground",
+            isToggleHeading &&
+              "text-4xl font-medium empty:before:content-['Heading']"
+          )}
+          onInput={(e) => handleInput(e.currentTarget.innerText)}
         >
-          {data.contents.innerText}
+          {innerTextRef.current}
         </p>
       </div>
-      <div className={cn('pl-4 mt-1', shouldShowChildren ? 'block' : 'hidden')}>
+      <div className={cn('pl-5 mt-1', shouldShowChildren ? 'block' : 'hidden')}>
         {children}
       </div>
     </BaseBETag>

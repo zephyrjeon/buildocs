@@ -46,7 +46,8 @@ export const RootBETag = (props: IRootBETagProps) => {
   return (
     <div
       onClick={handleClick}
-      className="pb-80 min-h-full whitespace-pre-wrap break-words"
+      className="pb-[35vh] min-h-full"
+      style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
     >
       {children}
     </div>

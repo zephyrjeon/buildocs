@@ -6,7 +6,6 @@ import { DOListableBE } from '@/entities/blockElement/DOListableBE';
 import { DORootBE } from '@/entities/blockElement/DORootBE';
 import { DOTextBE } from '@/entities/blockElement/DOTextBE';
 import { useStore } from '@/stores/RootStore';
-import { BEInput } from './BEInput';
 import { ContainerBETag } from './ContainerBETag';
 import { HeadingBETag } from './HeadingBETag';
 import { ListableBETag } from './ListableBETag';
@@ -78,10 +77,5 @@ export const BERenderer = (props: IBERendererProps) => {
     }
   });
 
-  return (
-    <>
-      {elements}
-      {/* {isRootLevel && <BEInput />} */}
-    </>
-  );
+  return <>{elements}</>;
 };

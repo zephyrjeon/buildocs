@@ -32,6 +32,10 @@ export class RootStore {
     return this.di.consts;
   }
 
+  get utils() {
+    return this.di.utils;
+  }
+
   log(msg: string) {
     console.log(`RootStore msg: ${msg}`);
   }

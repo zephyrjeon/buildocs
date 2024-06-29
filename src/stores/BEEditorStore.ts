@@ -23,10 +23,10 @@ type DraggedOverBEState = {
 };
 
 interface IState {
-  focusedBERef: HTMLElement | null;
   hoveredBE: DO_BE | null;
   draggingBEs: DO_BE[];
   draggedOverBEState: DraggedOverBEState | null;
+  focusedBERef: HTMLElement | null;
   isOutlineVisible: boolean;
 }
 
@@ -34,10 +34,10 @@ export class BEEditorStore {
   rootStore: RootStore;
 
   private state = create<IState>()(() => ({
-    focusedBERef: null,
     hoveredBE: null,
     draggingBEs: [],
     draggedOverBEState: null,
+    focusedBERef: null,
     isOutlineVisible: false,
   }));
 
@@ -79,8 +79,8 @@ export class BEEditorStore {
     return this.useState.isOutlineVisible;
   }
 
-  setFocusedBERef(BE: any) {
-    this.setState({ focusedBERef: BE });
+  setFocusedBERef(ref: HTMLElement | null) {
+    this.setState({ focusedBERef: ref });
   }
 
   setHoveredBE(BE: DO_BE | null) {
@@ -140,9 +140,14 @@ export class BEEditorStore {
   }
 
   updateBE(targetBE: DO_BE, data: Partial<Omit<DO_BE, 'id'>>) {
+    const cloned = this.rootStore.di.utils._.cloneDeep(targetBE);
     const newBEdata = {
-      ...this.rootStore.di.utils._.cloneDeep(targetBE),
+      ...cloned,
       ...data,
+      contents: {
+        ...cloned.contents,
+        ...data.contents,
+      },
     };
     const newBE = this.formIntoBE(newBEdata);
     const validatedBE = this.validateBE(newBE);
@@ -215,10 +220,7 @@ export class BEEditorStore {
 
       this.updateBE(BE, { parentId: newParentBE.id });
       this.updateBE(oldParentBE, {
-        contents: {
-          ...oldParentBE.contents,
-          childrenIds: childrenIdsForOldParentBE,
-        },
+        contents: { childrenIds: childrenIdsForOldParentBE },
       });
 
       let childrenIdsForNewParentBE: string[] = [];
@@ -251,10 +253,7 @@ export class BEEditorStore {
       }
 
       this.updateBE(newParentBE, {
-        contents: {
-          ...newParentBE.contents,
-          childrenIds: childrenIdsForNewParentBE,
-        },
+        contents: { childrenIds: childrenIdsForNewParentBE },
       });
     });
 
@@ -335,7 +334,7 @@ export class BEEditorStore {
   private formIntoBE(BE: Partial<IDOBaseBE>): DO_BE {
     BE = this.rootStore.di.utils._.cloneDeep(BE);
 
-    // Set all the possible properties with the default value then overide with BE provided
+    // Set all the possible properties with the default value then overide with BE data provided
     const newBE = {
       id: this.rootStore.di.utils.createUniqueId(
         this.rootStore.options.SHORT_UNIQUE_ID_LENGTH
