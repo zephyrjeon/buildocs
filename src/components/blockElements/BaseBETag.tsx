@@ -80,6 +80,20 @@ export const BaseBETag = (props: IBaseBETagProps) => {
       onDragStart={(e) => {
         e.stopPropagation(); // prevent parent BE's onDragStart
         store.BEEditStore.setDraggingBE(BE);
+
+        // how to style ghost elements?
+        //https://phuoc.ng/collection/react-drag-drop/customize-the-appearance-of-a-ghost-element/
+        const dragEle = e.currentTarget;
+        const nodeRect = dragEle.getBoundingClientRect();
+        e.dataTransfer.setDragImage(
+          dragEle,
+          e.clientX - nodeRect.left,
+          e.clientY - nodeRect.top
+        );
+        dragEle.style.opacity = '0';
+        setTimeout(() => {
+          dragEle.style.opacity = '1';
+        }, 0);
       }}
       onDragLeave={() => store.BEEditStore.setDraggedOverBE(null)}
       onDragEnd={() => {
