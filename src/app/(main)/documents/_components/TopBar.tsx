@@ -18,10 +18,11 @@ import { Toggle } from '@/components/ui/toggle';
 interface ITopBarProps {
   isCollapsed: boolean;
   onClickMenu: () => void;
+  isMobile: boolean;
 }
 
 export const Topbar = (props: ITopBarProps) => {
-  const { isCollapsed, onClickMenu } = props;
+  const { isCollapsed, onClickMenu, isMobile } = props;
   const [page, setPage] = React.useState<DOPage | null>(null);
   const [document, setDocument] = React.useState<DODocument | null>(null);
   const params = useParams();
@@ -40,6 +41,10 @@ export const Topbar = (props: ITopBarProps) => {
       } catch (error) {}
     }
   }, [pageId, documentId]);
+
+  if (isMobile && !isCollapsed) {
+    return null;
+  }
 
   return (
     <div>

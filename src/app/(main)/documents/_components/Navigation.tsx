@@ -5,43 +5,35 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { useSettings } from '@/hooks/useSettings';
 import { cn } from '@/lib/utils';
+import { useStore } from '@/stores/RootStore';
 import {
   ChevronsLeft,
-  Plus,
   PlusCircle,
   Search,
   Settings,
   Trash,
 } from 'lucide-react';
-import { useParams, usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 import { useMediaQuery } from 'usehooks-ts';
-// import { useSearch } from "@/hooks/use-search";
-
-import { useSettings } from '@/hooks/useSettings';
+import { DocumentList } from './DocumentList';
 import { NavItem } from './NavItem';
 import { NavUserItem } from './NavUserItem';
 import { Topbar } from './TopBar';
-import { DocumentList } from './DocumentList';
-import { useStore } from '@/stores/RootStore';
-// import { Item } from "./item";
-// import { DocumentList } from "./document-list";
-// import { TrashBox } from "./trash-box";
 
 const MIN_NAV_WIDTH = 240;
 const MAX_NAV_WIDTH = 480;
 
 export const Navigation = () => {
   const store = useStore();
-  const router = useRouter();
   const settings = useSettings();
-  // const search = useSearch();
-  const params = useParams();
-  const documentId = 'test';
   const pathname = usePathname();
-  const isMobile = useMediaQuery('(max-width: 768px)');
-
+  const isMobile = useMediaQuery('(max-width: 768px)', {
+    defaultValue: true,
+    initializeWithValue: false,
+  });
   const isResizingRef = React.useRef(false);
   const sidebarRef = React.useRef<React.ElementRef<'aside'>>(null);
   const topbarRef = React.useRef<React.ElementRef<'div'>>(null);
@@ -127,13 +119,13 @@ export const Navigation = () => {
     } else {
       resetNavWidth();
     }
-  }, [isMobile, resetNavWidth, handleCollapse]);
+  }, [isMobile]);
 
   React.useEffect(() => {
     if (isMobile) {
       handleCollapse();
     }
-  }, [pathname, isMobile, handleCollapse]);
+  }, [pathname, isMobile]);
 
   return (
     <>
@@ -149,8 +141,7 @@ export const Navigation = () => {
           onClick={handleCollapse}
           role="button"
           className={cn(
-            'h-6 w-6 text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute top-3 right-2 opacity-0 group-hover/sidebar:opacity-100 transition',
-            isMobile && 'opacity-100'
+            'h-6 w-6 text-muted-foreground rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 absolute top-3 right-2 group-hover/sidebar:opacity-100 transition'
           )}
         >
           <ChevronsLeft className="h-6 w-6" />
@@ -190,12 +181,16 @@ export const Navigation = () => {
       <div
         ref={topbarRef}
         className={cn(
-          `absolute top-0 z-[99999]  dark:bg-[#1F1F1F] left-[${MIN_NAV_WIDTH}px] w-[calc(100%-${MIN_NAV_WIDTH}px)]`,
+          `absolute top-0 z-[99999] dark:bg-[#1F1F1F] left-[${MIN_NAV_WIDTH}px] w-[calc(100%-${MIN_NAV_WIDTH}px)]`,
           isResetting && 'transition-all ease-in-out duration-300',
           isMobile && 'left-0 w-full'
         )}
       >
-        <Topbar isCollapsed={isCollapsed} onClickMenu={resetNavWidth} />
+        <Topbar
+          isMobile={isMobile}
+          isCollapsed={isCollapsed}
+          onClickMenu={resetNavWidth}
+        />
       </div>
     </>
   );

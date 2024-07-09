@@ -9,15 +9,15 @@ export const Heading = () => {
   const isLoading = false;
 
   return (
-    <div className="max-w-3xl space-y-4">
-      <div className="text-3xl font-bold whitespace-pre sm:text-5xl md:text-6xl">
-        <h1 className="sm:p-2">Document As You Wish</h1>
-        <h1 className="sm:p-2">Publish Your Work With</h1>
-        <h1 className="underline pt-3 sm:py-8 sm:text-6xl md:text-7xl">
+    <div className="space-y-4">
+      <div className="font-bold text-2xl whitespace-pre sm:text-3xl 2xl:text-6xl">
+        <h1 className="p-1 2xl:p-2">Document As You Wish</h1>
+        <h1 className="p-1 2xl:p-2">Publish Your Work With</h1>
+        <h1 className="underline pt-3 text-3xl sm:py-4 2xl:py-8 sm:text-5xl 2xl:text-7xl">
           Buildocs
         </h1>
       </div>
-      <h3 className="text-base font-medium whitespace-pre pb-4 sm:pb-8 sm:text-xl md:text-2xl">
+      <h3 className="text-sm font-extralight whitespace-pre pb-4 2xl:pb-8 sm:text-lg 2xl:text-2xl">
         Create your documents, layout and style it{`\n`}
         in the way you want to present your work on the Web.
       </h3>
