@@ -1,4 +1,11 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Live App
+
+[Link to Buildocs](https://zephyr.contact/buildocs)
+
+## Worklogs
+
+[Link to Notion](https://opposite-watcher-30a.notion.site/Microservice-Buildocs-9126767b36b5429aa4b7dd792f871eee)
+
 
 ## Getting Started
 
