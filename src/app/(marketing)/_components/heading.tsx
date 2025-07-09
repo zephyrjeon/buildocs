@@ -1,10 +1,11 @@
 'use client';
-
-import { ArrowRight } from 'lucide-react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { useStore } from '@/stores/RootStore';
+import { ArrowRight } from 'lucide-react';
 
 export const Heading = () => {
+  const store = useStore();
+  const signin = store.modalStore.useSignin();
   const isAuthenticated = true;
   const isLoading = false;
 
@@ -29,21 +30,17 @@ export const Heading = () => {
       )}
 
       {isAuthenticated && !isLoading && (
-        <Button asChild className="py-6 pl-12 pr-10 text-lg">
-          <Link href="/documents/">
-            Enter Buildocs
+        <Button
+          asChild
+          className="py-6 pl-12 pr-10 text-lg"
+          onClick={signin.onOpen}
+        >
+          <div>
+            Start Buildocs
             <ArrowRight className="h-6 w-6 ml-2" />
-          </Link>
+          </div>
         </Button>
       )}
-      {/* {!isAuthenticated && !isLoading && (
-        <SignInButton mode="modal">
-          <Button>
-            Get Jotion free
-            <ArrowRight className="h-4 w-4 ml-2" />
-          </Button>
-        </SignInButton>
-      )} */}
     </div>
   );
 };

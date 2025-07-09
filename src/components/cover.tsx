@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { useCoverImage } from '@/hooks/use-cover-image';
+import { useCoverImage } from '@/hooks/useCoverImage';
 
 interface CoverImageProps {
   url?: string;

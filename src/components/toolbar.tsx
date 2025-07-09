@@ -3,14 +3,11 @@
 import { ElementRef, useRef, useState } from 'react';
 import { ImageIcon, Smile, X } from 'lucide-react';
 import TextareaAutosize from 'react-textarea-autosize';
-
-import { useCoverImage } from '@/hooks/use-cover-image';
+import { useCoverImage } from '@/hooks/useCoverImage';
 import { Button } from '@/components/ui/button';
-
 import { IconPicker } from './icon-picker';
 
 interface ToolbarProps {
-  // initialData: Doc<"documents">;
   initialData: any;
   preview?: boolean;
 }
@@ -21,9 +18,6 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const [value, setValue] = useState(initialData.title);
 
   initialData.title = 'Test title';
-
-  // const update = useMutation(api.documents.update);
-  // const removeIcon = useMutation(api.documents.removeIcon);
 
   const coverImage = useCoverImage();
 
@@ -41,10 +35,6 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
 
   const onInput = (value: string) => {
     setValue(value);
-    // update({
-    //   id: initialData._id,
-    //   title: value || "Untitled"
-    // });
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -54,18 +44,9 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
     }
   };
 
-  const onIconSelect = (icon: string) => {
-    // update({
-    //   id: initialData._id,
-    //   icon,
-    // });
-  };
+  const onIconSelect = (icon: string) => {};
 
-  const onRemoveIcon = () => {
-    // removeIcon({
-    //   id: initialData._id
-    // })
-  };
+  const onRemoveIcon = () => {};
 
   return (
     <div className="pl-[54px] group relative z-[99999]">

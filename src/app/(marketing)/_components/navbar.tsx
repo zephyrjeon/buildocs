@@ -34,7 +34,7 @@ export const Navbar = () => {
             </SignInButton>
             <SignInButton mode="modal">
               <Button size="sm">
-                Get Jotion free
+                Sign up
               </Button>
             </SignInButton>
           </>
@@ -42,7 +42,7 @@ export const Navbar = () => {
         {isAuthenticated && !isLoading && (
           <>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/buildocs/documents">Enter Buildocs</Link>
+              <Link href="/documents">Start Buildocs</Link>
             </Button>
             {/* <UserButton
               afterSignOutUrl="/"
