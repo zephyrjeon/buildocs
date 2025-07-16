@@ -14,4 +14,7 @@ const URLs = {
   documents: '/documents',
   pages: (documentId: string, pageId: string) =>
     `${URLs.documents}/${documentId}/pages/${pageId}`,
+  api: {
+    signin: `http://localhost/api/portfolio-gateway/v1/portfolio-auth/signin`,
+  },
 };
